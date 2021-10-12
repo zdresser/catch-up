@@ -1,6 +1,6 @@
 const Post = require('../models/post')
 const Comment = require('../models/comment')
-const { UserInterfaceIdiom } = require('expo-constants')
+
 
 exports.getComments = (req, res) => {
   Post.findById(req.params.post)

@@ -1,30 +1,27 @@
 import React from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { loginAsync } from '../redux/userSlice';
 import { StyleSheet, Platform, TouchableWithoutFeedback, Keyboard, View } from 'react-native'
 import { colors, ThemeProvider, Input, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useState } from "react";
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
-
-
-const theme = {
-  colors: {
-    ...Platform.select({
-      default: colors.platform.android,
-      ios: colors.platform.ios,
-    }),
-  },
-};
-
 
 
 export default function Login({navigation}) {
-
+  const user = useSelector(state => state.user)
+ 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  
-  const submitLogin = () => {
-    console.log('submit')
+
+  const dispatch = useDispatch();
+ 
+  const submitLogin = async () => {
+    dispatch(loginAsync({
+      email: email,
+      password: password
+    }))
+    
+    // navigation.navigate('Home')
   }
 
   const navigateToSignup = () => {

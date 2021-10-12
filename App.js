@@ -1,56 +1,31 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React, { useEffect, useState } from 'react';
 
-import Header from './components/header';
-import Home from './screens/home';
-import Profile from './screens/profile';
-import Post from './screens/post';
-import Group from './screens/group';
-import Login from './screens/login';
-import Signup from './screens/signup'
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux'
+import store from './redux/store'
 
-const Stack = createNativeStackNavigator();
-const isSignedIn = false;
+import Loading from './screens/loading';
+
+import Navigation from './navigation/navigation'
+
 //add dynamically generated titles for groups, post
 //styles not applying in navcontainer
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true)
+
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(!isLoading);
+    }, 500)
+  }, [])
+
+  if (isLoading) {
+    return <Loading />
+  }
+
   return (
-    <NavigationContainer screenOptions={{
-      headerStyle: {
-        backgroundColor: "green",
-      },
-      headerTitleStyle: {
-        fontWeight: 'bold',
-        },
-    }}>
-      {/* <Header /> */}
-      <Stack.Navigator>
-        {isSignedIn ? (
-          <>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Group" component={Group} />
-        <Stack.Screen name="Post" component={Post} />
-        </>
-        ) : (
-        <>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Signup" component={Signup} /> 
-          </>
-        )}
-        
-        
-      </Stack.Navigator>
-   </NavigationContainer>
-       
+    <Provider store={store}>
+      <Navigation />
+   </Provider>    
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-
-  }
-})

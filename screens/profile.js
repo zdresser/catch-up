@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Button, ScrollView } from 'react-native'
 
+//include button to delete groups created
 
 export default function Profile() {
   return (

@@ -11,9 +11,22 @@ const tokenForUser = (user) => {
 };
 
 exports.login = (req, res) => {
-  res.send({
-    token: tokenForUser(req.user)
-  });
+  console.log(req.body)
+  User.findOne({ email: req.body.email })
+    .populate('groups')
+    .exec((err, user) => {
+      console.log(user)
+      if (!user) {
+        res.status(404).send("User not found");
+      } else if (err) {
+        next(err)
+      }
+      res.send({
+        username: user.username,
+        token: tokenForUser(user),
+        groups: user.groups
+      })
+    })
 };
 
 exports.currentUser = function(req, res) {

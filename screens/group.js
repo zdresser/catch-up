@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, View, Text, Button, ScrollView } from 'react-native'
 
 
-export default function Group() {
+export default function Group({ route, navigation }) {
+  
+  console.log(route.params)
   //posts need to include author, , upvote buttons, num comments
   return (
     <View style={styles.container}>
