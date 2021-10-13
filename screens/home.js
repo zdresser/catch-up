@@ -3,7 +3,7 @@ import { StyleSheet, View,  Text, FlatList, ScrollView, Platform } from 'react-n
 import {  Button, ListItem, Badge } from 'react-native-elements';
 import {useSelector} from 'react-redux'
 
-const groups = ['Group 1', 'Group 2', 'Group 3']
+
 
 export default function Home({navigation}) {
   //add logic to toggle between login/signup and group view

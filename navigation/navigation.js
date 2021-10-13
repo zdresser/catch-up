@@ -17,16 +17,28 @@ const Stack = createNativeStackNavigator();
 
 export default function Navigation() {
   const user = useSelector(state => state.user);
-
+  const group = useSelector(state => state.group)
+  
   return (
     <NavigationContainer>
       {/* <Header /> */}
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "beige"
+          },
+          headerTintColor: 'cornflowerblue'
+        }}  
+      >
         {user.authenticated ? (
           <>
-        <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Group" component={Group} />
+        <Stack.Screen name="Group" component={Group}
+              options={{
+                title: group.title
+              }}
+            />
         <Stack.Screen name="Post" component={Post} />
         </>
         ) : (
