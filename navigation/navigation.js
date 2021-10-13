@@ -33,7 +33,7 @@ export default function Navigation() {
       >
         {user.authenticated ? (
         <>
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="CatchUp" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="Group" component={Group}
               options={{

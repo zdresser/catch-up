@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { StyleSheet, View, Text,  FlatList, ScrollView } from 'react-native'
-import {ListItem, Button} from 'react-native-elements'
+import {ListItem, Button, Icon} from 'react-native-elements'
 import { getGroupAsync } from '../redux/groupSlice'
 import { useDispatch, useSelector } from "react-redux";
 
@@ -31,20 +31,34 @@ export default function Group({ route, navigation }) {
         data={group.posts}
         keyExtractor={(item)=>item._id}
         renderItem={({ item }) => (
+          
           <ListItem
             bottomDivider
             containerStyle={{
               backgroundColor: '#f7d260',
-              width: 200,
+              width: 250,
               margin: 10,
+              borderRadius:35
              
             }}
-          onPress={() => handlePostPress(item._id)}
+            onPress={() => handlePostPress(item._id)}
           >
+           <Icon
+              name='arrow-up'
+              type='font-awesome-5'
+              color='cornflowerblue'
+            />
             <ListItem.Content>
-            <ListItem.Title>{item.text}</ListItem.Title>
+              <ListItem.Title>{item.text}</ListItem.Title>
+              <ListItem.Subtitle>Num Upvotes</ListItem.Subtitle>
             </ListItem.Content>
+            <Icon
+              name='arrow-down'
+              type='font-awesome-5'
+              color='cornflowerblue'
+            />
           </ListItem>
+         
         )} />
       <View style={styles.button}>
         <Button

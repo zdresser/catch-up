@@ -15,7 +15,7 @@ export default function NewPost({route, navigation}) {
       return alert("Please enter a name for your card")
     }
     dispatch(addPostAsync({
-      user: user._id,
+      author: user._id,
       text: newPost,
       group: route.params.group
     }))
