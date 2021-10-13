@@ -1,12 +1,11 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
-import thunk from 'redux-thunk'
-import postsReducer from './postSlice'
+import postReducer from './postSlice'
 import userReducer from './userSlice'
 import groupReducer from './groupSlice'
 
 const reducer = combineReducers({
-  posts: postsReducer,
+  post: postReducer,
   user: userReducer,
   group: groupReducer
 })

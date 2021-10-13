@@ -15,7 +15,6 @@ exports.login = (req, res) => {
   User.findOne({ email: req.body.email })
     .populate('groups')
     .exec((err, user) => {
-      console.log(user)
       if (!user) {
         res.status(404).send("User not found");
       } else if (err) {

@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'beige'
+    backgroundColor: '#fcf7e8'
     
   }
 })

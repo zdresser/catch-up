@@ -11,6 +11,7 @@ import Post from '../screens/post';
 import Group from '../screens/group';
 import Login from '../screens/login';
 import Signup from '../screens/signup';
+import NewPost from '../screens/newPost'
 import Loading from '../screens/loading';
 
 const Stack = createNativeStackNavigator();
@@ -25,21 +26,22 @@ export default function Navigation() {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: "beige"
+            backgroundColor: '#f7d260'
           },
           headerTintColor: 'cornflowerblue'
         }}  
       >
         {user.authenticated ? (
-          <>
-            <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Group" component={Group}
+        <>
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Group" component={Group}
               options={{
                 title: group.title
               }}
             />
-        <Stack.Screen name="Post" component={Post} />
+          <Stack.Screen name="Post" component={Post} />
+          <Stack.Screen name="NewPost" component={NewPost} />
         </>
         ) : (
         <>

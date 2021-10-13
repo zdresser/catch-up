@@ -62,7 +62,7 @@ module.exports = (app) => {
   app.get('/api/groups/:group/posts', Posts.getPosts)
   app.post('/api/groups/:group/posts', Posts.addPost)
 
-  app.post('/api/posts/:post', Posts.getPost)
+  app.get('/api/posts/:post', Posts.getPost)
   app.put('/api/posts/:post', Posts.editPost)
   app.delete('/api/posts/:post', Posts.deletePost)
 

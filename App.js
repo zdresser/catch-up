@@ -10,18 +10,18 @@ import Navigation from './navigation/navigation'
 //add dynamically generated titles for groups, post
 //styles not applying in navcontainer
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true)
 
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(!isLoading);
-    }, 500)
-  }, [])
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLoading(!isLoading);
+  //   }, 500)
+  // }, [])
 
-  if (isLoading) {
-    return <Loading />
-  }
+  // if (isLoading) {
+  //   return <Loading />
+  // }
 
   return (
     <Provider store={store}>
