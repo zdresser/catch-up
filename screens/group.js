@@ -1,13 +1,14 @@
 import React, {useEffect} from 'react';
 import { StyleSheet, View, Text,  FlatList, ScrollView } from 'react-native'
 import {ListItem, Button, Icon} from 'react-native-elements'
-import { getGroupAsync } from '../redux/groupSlice'
+import { getGroupAsync, editPostVotes } from '../redux/groupSlice'
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
+  
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
     dispatch(getGroupAsync(route.params.group))
   }, [])
@@ -18,6 +19,30 @@ export default function Group({ route, navigation }) {
 
   const newPostPress = () => {
     navigation.navigate('NewPost', {group: group._id})
+  }
+  const handleUpvotePress = (id) => {
+    //edit vote count
+    const post = group.posts.find(({ _id }) => _id === id)
+  
+    const votes = post.upvotes + 1
+    //dispatch update
+    dispatch(editPostVotes({
+      post: id,
+      upvotes: votes
+    }))
+
+    //figure out how to allow only one upvote or downvote...
+  }
+
+  const handleDownvotePress = (id) => {
+    const post = group.posts.find(({ _id }) => _id === id)
+  
+    const votes = post.upvotes - 1
+    
+    dispatch(editPostVotes({
+      post: id,
+      upvotes: votes
+    }))
   }
 
   //style entries
@@ -47,15 +72,18 @@ export default function Group({ route, navigation }) {
               name='arrow-up'
               type='font-awesome-5'
               color='cornflowerblue'
+              onPress={() => handleUpvotePress(item._id)}
             />
             <ListItem.Content>
               <ListItem.Title>{item.text}</ListItem.Title>
-              <ListItem.Subtitle>Num Upvotes</ListItem.Subtitle>
+              <ListItem.Subtitle>{item.upvotes}</ListItem.Subtitle>
+              
             </ListItem.Content>
             <Icon
               name='arrow-down'
               type='font-awesome-5'
               color='cornflowerblue'
+              onPress={() => handleDownvotePress(item._id)}
             />
           </ListItem>
          
@@ -63,7 +91,7 @@ export default function Group({ route, navigation }) {
       <View style={styles.button}>
         <Button
           title="New Post"
-          onPress={newPostPress}
+          onPress={() => newPostPress()}
         />
     </View>
     </View>

@@ -10,19 +10,33 @@ export const getPostAsync = createAsyncThunk(
   }
 )
 
+export const editPost = createAsyncThunk(
+  'post/editPost',
+  async (editPostObj) => {
+    const response = await axios.put(`http://192.168.4.62:5000/api/posts/${editPostObj.post}`, editPostObj)
+    const data = response.data;
+    return { data }
+  }
+)
+
 
 
 const postSlice = createSlice({
   name: "post",
   initialState: {
     comments: [],
-    text: ""
+    text: "",
+    author: ""
   },
   reducers: {},
   extraReducers: {
     [getPostAsync.fulfilled]: (state, action) => {
       return action.payload.data
     },
+
+    [editPost.fulfilled]: (state, action) => {
+      //todo
+    }
     
   }
 })

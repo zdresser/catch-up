@@ -20,6 +20,15 @@ export const addPostAsync = createAsyncThunk(
   }
 )
 
+export const editPostVotes = createAsyncThunk(
+  'post/editPostVotes',
+  async (editPostObj) => {
+    const response = await axios.put(`http://192.168.4.62:5000/api/posts/${editPostObj.post}`, editPostObj)
+    const data = response.data;
+    return { data }
+  }
+)
+
 const groupSlice = createSlice({
   name: "group",
   initialState: {
@@ -32,6 +41,13 @@ const groupSlice = createSlice({
     },
     [addPostAsync.fulfilled]: (state, action) => {
       state.posts.push(action.payload.data)
+    },
+    [editPostVotes.fulfilled]: (state, action) => {
+      const updatedVotes = action.payload.data.upvotes;
+
+      const post = state.posts[state.posts.findIndex(({ _id }) => _id === action.payload.data._id)];
+
+      post.upvotes = updatedVotes
     }
   }
 })

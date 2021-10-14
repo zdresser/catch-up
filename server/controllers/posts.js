@@ -28,7 +28,8 @@ exports.addPost = (req, res) => {
         author: req.body.userId,
         text: req.body.text,
         group: group._id,
-        comments: []
+        comments: [],
+        upvotes: 0
       })
 
       newPost.save();
@@ -48,6 +49,7 @@ exports.editPost = (req, res) => {
   Post.findOneAndUpdate({ _id: req.params.post }, update, { new: true })
     .exec((err, updatedPost) => {
       if (err) next(err)
+      console.log(updatedPost)
       res.status(200).json(updatedPost)
     })
 }
