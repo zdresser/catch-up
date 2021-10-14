@@ -34,7 +34,11 @@ const groupSlice = createSlice({
   initialState: {
     posts: []
   },
-  reducers: {},
+  reducers: {
+    sortPostsByUpvotes(state, action) {
+     state.posts.sort((a, b) => (a.upvotes > b.upvotes) ? -1 : 1)
+    }
+  },
   extraReducers: {
     [getGroupAsync.fulfilled]: (state, action) => {
       return action.payload.data
@@ -51,5 +55,5 @@ const groupSlice = createSlice({
     }
   }
 })
-
-export default groupSlice.reducer
+export const { sortPostsByUpvotes } = groupSlice.actions;
+export default groupSlice.reducer;

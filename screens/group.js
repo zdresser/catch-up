@@ -1,17 +1,23 @@
 import React, {useEffect} from 'react';
 import { StyleSheet, View, Text,  FlatList, ScrollView } from 'react-native'
 import {ListItem, Button, Icon} from 'react-native-elements'
-import { getGroupAsync, editPostVotes } from '../redux/groupSlice'
+import { getGroupAsync, editPostVotes, sortPostsByUpvotes } from '../redux/groupSlice'
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
   
+
   const dispatch = useDispatch();
   
   useEffect(() => {
     dispatch(getGroupAsync(route.params.group))
+    
   }, [])
+
+  useEffect(() => {
+    dispatch(sortPostsByUpvotes(group.posts))
+  }, [group.posts])
 
   const handlePostPress = (id) => {
     navigation.navigate('Post', {post: id})
