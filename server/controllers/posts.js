@@ -2,6 +2,7 @@ const User = require('../models/user')
 const Group = require('../models/group')
 const Post = require('../models/post')
 
+const axios = require('axios')
 exports.getPosts = (req, res) => {
   Group.findById(req.params.group)
     //probably need to populate some stuff
@@ -19,7 +20,20 @@ exports.getPost = (req, res) => {
     })
 }
 
-exports.addPost = (req, res) => {
+exports.addPost = async (req, res) => {
+  let previewData;
+
+  if (req.body.link) {
+    const res = await axios.get('http://api.linkpreview.net/', {
+        params: {
+          key: 'ade358679288e5ee6471165a169a280f',
+          q: req.body.link
+        }
+      })
+     previewData = res.data
+  }
+
+  
   Group.findById(req.params.group)
     .exec((err, group) => {
       if (err) next(err)
@@ -30,9 +44,10 @@ exports.addPost = (req, res) => {
         group: group._id,
         comments: [],
         link: req.body.link,
+        preview: previewData,
         upvotes: 0
       })
-
+      
       newPost.save();
       group.posts.push(newPost);
       group.save();

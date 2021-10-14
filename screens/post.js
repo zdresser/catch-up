@@ -20,34 +20,35 @@ export default function Post({ navigation, route }) {
     dispatch(getPostAsync(route.params.post))
   }, [])
   
-  useEffect(() => {
-    generateLinkPreview()
+  // useEffect(() => {
+  //   generateLinkPreview()
     
-  }, [post])
+  // }, [post])
 
-  const generateLinkPreview = async () => {
+  // const generateLinkPreview = async () => {
     
-    const res = await axios.get('http://api.linkpreview.net/', {
-        params: {
-          key: 'ade358679288e5ee6471165a169a280f',
-          q: post.link
-        }
-      })
-     const data = res.data
-    setFetchedPost(data)
-  }
+  //   const res = await axios.get('http://api.linkpreview.net/', {
+  //       params: {
+  //         key: 'ade358679288e5ee6471165a169a280f',
+  //         q: post.link
+  //       }
+  //     })
+  //    const data = res.data
+  //   setFetchedPost(data)
+  // }
 
   if (post.link) {
     
     return (
       <View style={styles.container}>
         <Card>
-          <Card.Title>{fetchedPost.description.substring(0,150)}</Card.Title>
-          <Text>{fetchedPost.title}</Text>
+          <Card.Title>{post.preview.description.substring(0,200)}</Card.Title>
+          <Text>{post.preview.title}</Text>
           
           <Card.Image
-            source={{ uri: fetchedPost.image }}
-           onPress={() => Linking.openURL(fetchedPost.url)}
+            source={{ uri: post.preview.image }}
+            style={{ height: 200 }}
+           onPress={() => Linking.openURL(post.preview.url)}
           />
         </Card>
       </View>

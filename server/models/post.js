@@ -6,6 +6,7 @@ const postSchema = new Schema({
   text: String,
   link: String,
   upvotes: Number,
+  preview: {},
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   group: { type: Schema.Types.ObjectId, ref: "Group" },
 },
