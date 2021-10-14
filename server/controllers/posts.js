@@ -29,6 +29,7 @@ exports.addPost = (req, res) => {
         text: req.body.text,
         group: group._id,
         comments: [],
+        link: req.body.link,
         upvotes: 0
       })
 

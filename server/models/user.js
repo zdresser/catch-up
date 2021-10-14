@@ -19,6 +19,10 @@ const userSchema = new Schema({
     type: String,
     
   },
+  voteRecord: [{
+    post: String,
+    vote: Number
+  }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   groups: [{ type: Schema.Types.ObjectId, ref: "Group" }],
 })

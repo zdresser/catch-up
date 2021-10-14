@@ -19,14 +19,13 @@ export const editPost = createAsyncThunk(
   }
 )
 
-
-
 const postSlice = createSlice({
   name: "post",
   initialState: {
     comments: [],
     text: "",
-    author: ""
+    author: "",
+    
   },
   reducers: {},
   extraReducers: {
@@ -36,7 +35,8 @@ const postSlice = createSlice({
 
     [editPost.fulfilled]: (state, action) => {
       //todo
-    }
+    },
+    
     
   }
 })

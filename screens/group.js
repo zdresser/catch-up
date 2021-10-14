@@ -27,6 +27,9 @@ export default function Group({ route, navigation }) {
     navigation.navigate('NewPost', {group: group._id})
   }
   const handleUpvotePress = (id) => {
+    //check for previous vote
+    
+
     //edit vote count
     const post = group.posts.find(({ _id }) => _id === id)
   
@@ -37,7 +40,8 @@ export default function Group({ route, navigation }) {
       upvotes: votes
     }))
 
-    //figure out how to allow only one upvote or downvote...
+    //update user to show that they have voted
+    
   }
 
   const handleDownvotePress = (id) => {

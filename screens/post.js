@@ -1,30 +1,65 @@
-import React, {useEffect} from 'react';
-import { StyleSheet, View, Text, Button, ScrollView, FlatList } from 'react-native'
-import {ListItem} from 'react-native-elements'
+import React, {useEffect, useState} from 'react';
+import { StyleSheet, View, Text, Linking } from 'react-native'
+import {Card} from 'react-native-elements'
 import { useDispatch, useSelector } from "react-redux";
-import { getPostAsync } from '../redux/postSlice'
+import { getPostAsync, getPreviewAsync } from '../redux/postSlice'
+import axios from 'axios'
 
 
 export default function Post({ navigation, route }) {
-  
-  const post = useSelector(state => state.post)
+  //use deep linking to launch link in appropriate app 
 
+  const post = useSelector(state => state.post)
+  
+  const [fetchedPost, setFetchedPost] = useState({
+   description: ''
+  })
   const dispatch = useDispatch();
   
   useEffect(() => {
     dispatch(getPostAsync(route.params.post))
   }, [])
-
-
-  return (
-   
   
-    <View style={styles.container}>
-      <Text>{post.text}</Text>
+  useEffect(() => {
+    generateLinkPreview()
     
-    </View>
+  }, [post])
+
+  const generateLinkPreview = async () => {
+    
+    const res = await axios.get('http://api.linkpreview.net/', {
+        params: {
+          key: 'ade358679288e5ee6471165a169a280f',
+          q: post.link
+        }
+      })
+     const data = res.data
+    setFetchedPost(data)
+  }
+
+  if (post.link) {
+    
+    return (
+      <View style={styles.container}>
+        <Card>
+          <Card.Title>{fetchedPost.description.substring(0,150)}</Card.Title>
+          <Text>{fetchedPost.title}</Text>
+          
+          <Card.Image
+            source={{ uri: fetchedPost.image }}
+           onPress={() => Linking.openURL(fetchedPost.url)}
+          />
+        </Card>
+      </View>
  
-  )
+    )
+  } else {
+    return (
+      <View style={styles.container}>
+        <Text>{post.text}</Text>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
