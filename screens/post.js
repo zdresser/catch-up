@@ -19,23 +19,6 @@ export default function Post({ navigation, route }) {
   useEffect(() => {
     dispatch(getPostAsync(route.params.post))
   }, [])
-  
-  // useEffect(() => {
-  //   generateLinkPreview()
-    
-  // }, [post])
-
-  // const generateLinkPreview = async () => {
-    
-  //   const res = await axios.get('http://api.linkpreview.net/', {
-  //       params: {
-  //         key: 'ade358679288e5ee6471165a169a280f',
-  //         q: post.link
-  //       }
-  //     })
-  //    const data = res.data
-  //   setFetchedPost(data)
-  // }
 
   if (post.link) {
     

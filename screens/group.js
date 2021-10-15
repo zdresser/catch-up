@@ -1,18 +1,17 @@
 import React, {useEffect} from 'react';
-import { StyleSheet, View, Text,  FlatList, ScrollView } from 'react-native'
-import {ListItem, Button, Icon} from 'react-native-elements'
+import { StyleSheet, View, Text,   ScrollView, Linking } from 'react-native'
+import {ListItem, Button, Icon, Image} from 'react-native-elements'
 import { getGroupAsync, editPostVotes, sortPostsByUpvotes } from '../redux/groupSlice'
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
   
-
+  
   const dispatch = useDispatch();
   
   useEffect(() => {
     dispatch(getGroupAsync(route.params.group))
-    
   }, [])
 
   useEffect(() => {
@@ -62,42 +61,82 @@ export default function Group({ route, navigation }) {
     
 
     <View style={styles.container}>
-      <FlatList
-        data={group.posts}
-        keyExtractor={(item)=>item._id}
-        renderItem={({ item }) => (
-          
-          <ListItem
+      <ScrollView>
+        {group.posts.map((post) => {
+        
+          if (post.link) {
+            
+          return (
+            
+            <ListItem
             bottomDivider
-            containerStyle={{
-              backgroundColor: '#f7d260',
-              width: 250,
-              margin: 10,
-              borderRadius:35
-             
-            }}
-            onPress={() => handlePostPress(item._id)}
+            containerStyle={styles.postContainer}
+              onPress={() => handlePostPress(post._id)}
+            key={post._id}
           >
            <Icon
               name='arrow-up'
               type='font-awesome-5'
               color='cornflowerblue'
-              onPress={() => handleUpvotePress(item._id)}
+              onPress={() => handleUpvotePress(post._id)}
             />
             <ListItem.Content>
-              <ListItem.Title>{item.text}</ListItem.Title>
-              <ListItem.Subtitle>{item.upvotes}</ListItem.Subtitle>
+              <ListItem.Title>{post.text}</ListItem.Title>
+              <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
+                
+              <ListItem.Subtitle>
+                {post.preview.title}
+              </ListItem.Subtitle>
+              <ListItem.Subtitle>
+                {post.preview.description.substring(0, 100)}
+              </ListItem.Subtitle>
+              <Image
+                source={{ uri: post.preview.image }}
+              />
+
+              </ListItem.Content>
+              
+            <Icon
+              name='arrow-down'
+              type='font-awesome-5'
+              color='cornflowerblue'
+              onPress={() => handleDownvotePress(post._id)}
+            />
+            </ListItem>
+           
+            
+        )
+        } else {
+          return (
+            <ListItem
+              bottomDivider
+              containerStyle={styles.postContainer}
+              onPress={() => handlePostPress(post._id)}
+              key={post._id}
+            >
+           <Icon
+              name='arrow-up'
+              type='font-awesome-5'
+              color='cornflowerblue'
+              onPress={() => handleUpvotePress(post._id)}
+            />
+            <ListItem.Content>
+              <ListItem.Title>{post.text}</ListItem.Title>
+                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
               
             </ListItem.Content>
             <Icon
               name='arrow-down'
               type='font-awesome-5'
               color='cornflowerblue'
-              onPress={() => handleDownvotePress(item._id)}
+              onPress={() => handleDownvotePress(post._id)}
             />
           </ListItem>
-         
-        )} />
+          )
+        }
+      })}
+      </ScrollView>
+    
       <View style={styles.button}>
         <Button
           title="New Post"
@@ -118,5 +157,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: 5
+  },
+  postContainer: {
+    backgroundColor: '#f7d260',
+    width: 300,
+    margin: 10,
+    borderRadius:35
   }
 })
