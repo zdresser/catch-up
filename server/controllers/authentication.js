@@ -20,11 +20,14 @@ exports.login = (req, res) => {
       } else if (err) {
         next(err)
       }
-      res.send({
-        username: user.username,
-        token: tokenForUser(user),
-        groups: user.groups
-      })
+      console.log(user._id)
+      res.status(200).send(user)
+      // res.send({
+      //   username: user.username,
+      //   token: tokenForUser(user),
+      //   groups: user.groups,
+      //   _id: user._id
+      // })
     })
 };
 

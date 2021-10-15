@@ -35,9 +35,7 @@ const postSlice = createSlice({
 
     [editPost.fulfilled]: (state, action) => {
       //todo
-    },
-    
-    
+    }    
   }
 })
 

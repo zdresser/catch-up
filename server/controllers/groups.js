@@ -35,15 +35,18 @@ exports.addGroup = (req, res) => {
     return res.end();
   }
 
-  User.findById(req.body.userId)
+  console.log(req.body)
+
+  User.findById(req.body.creator)
     .exec((err, user) => {
       const newGroup = new Group({
         title: req.body.title,
+        creator: req.body.creator,
         users: [],
         posts: []
       })
       
-      newGroup.users.push(user._id);
+      newGroup.users.push(req.body.creator);
       newGroup.save()
       user.groups.push(newGroup);
       user.save();

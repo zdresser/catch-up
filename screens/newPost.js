@@ -9,9 +9,8 @@ export default function NewPost({route, navigation}) {
   const [newLink, setNewLink] = useState('')
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
-
+  console.log(user._id)
   const submitNewPost = () => {
-
     if (!newPost && !newLink) {
       return alert("Please enter a link or some text for your post")
     }
