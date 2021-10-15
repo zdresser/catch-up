@@ -50,6 +50,21 @@ app.param('comment', (req, res, next, id) => {
       next();
     })
 })
+// fetches user
+// app.param('user', (req, res, next, id) => {
+//   User.findById(id)
+//     .exec((err, user) => {
+//       if (!user) {
+//         res.status(404).send('User not found');
+//         return res.end();
+//       } else if (err) {
+//         next(err);
+//       }
+//       req.user = user;
+      
+//       next();
+//     })
+//   })
 
 //routes
 module.exports = (app) => {
@@ -76,5 +91,8 @@ module.exports = (app) => {
   app.post('/auth/login', Authentication.login);
   app.post('/auth/logout', Authentication.logout),
   app.post('/auth/signup', Authentication.signup),
-  app.get('/auth/current_user', Authentication.currentUser)
+    app.get('/auth/current_user', Authentication.currentUser)
+  
+  app.put('/api/users/:user', Authentication.updateVotes)
+  
 }

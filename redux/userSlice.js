@@ -27,6 +27,15 @@ export const addGroupAsync = createAsyncThunk(
   }
 )
 
+export const editVotesAsync = createAsyncThunk(
+  'user/editVotesAsync',
+  async (editVotesObj) => {
+    const response = await axios.put(`http://192.168.4.62:5000/api/users/${editVotesObj.user}`, editVotesObj)
+
+    const data = response.data
+    return {data}
+  }
+)
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -42,6 +51,9 @@ const userSlice = createSlice({
     },
     [addGroupAsync.fulfilled]: (state, action) => {
       state.groups.push(action.payload.data)
+    },
+    [editVotesAsync.fulfilled]: (state, action) => {
+      return action.payload.data //API should return whole user and this will replace the entire user state, including the changed vote values
     }
   }
 })

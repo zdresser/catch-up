@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import { StyleSheet, View, Text,   ScrollView, Linking } from 'react-native'
 import {ListItem, Button, Icon, Image} from 'react-native-elements'
 import { getGroupAsync, editPostVotes, sortPostsByUpvotes } from '../redux/groupSlice'
+import {editVotesAsync} from '../redux/userSlice'
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Group({ route, navigation }) {
@@ -26,8 +27,8 @@ export default function Group({ route, navigation }) {
   }
   const handleUpvotePress = (id) => {
     //check for previous vote
-    
-
+    // const userVotes = user.voteRecord.find()
+    //alert user that vote has happened
     //edit vote count
     const post = group.posts.find(({ _id }) => _id === id)
   
@@ -39,7 +40,7 @@ export default function Group({ route, navigation }) {
     }))
 
     //update user to show that they have voted
-    
+    //dispatch(editVotesAsync({user=user._id, post: id, votes: votes}))
   }
 
   const handleDownvotePress = (id) => {
@@ -84,7 +85,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} Posted by {post.authorName}{"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.authorName}{"\n"}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
                   {post.preview.title}
@@ -92,12 +93,12 @@ export default function Group({ route, navigation }) {
                 <ListItem.Subtitle>
                   {post.preview.description.substring(0, 100)}
                 </ListItem.Subtitle>
+{/* Edit image so that the generic twitter one doesnt show? */}
                 <Image
                     source={{ uri: post.preview.image }}
                     style={{
                       height: 250,
                       width: 250
-                      // this doesn't show up!!!
                     }}
                 />
 

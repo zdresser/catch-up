@@ -33,6 +33,7 @@ export default function Post({ navigation, route }) {
            onPress={() => Linking.openURL(post.preview.url)}
           />
         </Card>
+        <Text>Chat goes here</Text>
       </View>
  
     )
@@ -47,7 +48,7 @@ export default function Post({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 40,
+    paddingTop: 10,
     flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
