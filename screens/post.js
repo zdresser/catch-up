@@ -21,7 +21,9 @@ export default function Post({ navigation, route }) {
     
     return (
       <View style={styles.container}>
-        <Card>
+        <Card
+          containerStyle={styles.post}
+        >
           <Card.Title>{post.preview.description.substring(0,200)}</Card.Title>
           <Text>{post.preview.title}</Text>
           
@@ -49,6 +51,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
-    
+    backgroundColor: '#9D9D9D'
+  },
+  post: {
+    backgroundColor: '#FEFBF3',
+    borderRadius: 5
   }
 })

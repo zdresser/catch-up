@@ -25,10 +25,12 @@ export default function Home({navigation}) {
                 key={index}
                 bottomDivider
                 onPress={() => handleGroupPress(item._id)}
-                containerStyle={{ backgroundColor: "cornflowerblue" }}
+                containerStyle={styles.listItem}
                 
               >
-                <ListItem.Title>{item.title}</ListItem.Title>
+                <ListItem.Title
+                  style={{color: '#FEFBF3'}}
+                >{item.title}</ListItem.Title>
             </ListItem>
             )
           })
@@ -46,7 +48,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#fcf7e8'
-    
+    backgroundColor: '#9D9D9D',
+  },
+  title: {
+    color: '#FEFBF3',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  listItem: {
+    backgroundColor: '#79B4B7',
+    borderRadius: 35,
   }
 })

@@ -26,9 +26,9 @@ export default function Navigation() {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#f7d260'
+            backgroundColor: '#79B4B7'
           },
-          headerTintColor: 'cornflowerblue'
+          headerTintColor: '#FEFBF3'
         }}  
       >
         {user.authenticated ? (

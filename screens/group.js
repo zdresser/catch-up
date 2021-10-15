@@ -58,8 +58,6 @@ export default function Group({ route, navigation }) {
   //posts need to include author, , upvote buttons, num comments
   //add infinite scroll
   return (
-    
-
     <View style={styles.container}>
       <ScrollView>
         {group.posts.map((post) => {
@@ -78,13 +76,15 @@ export default function Group({ route, navigation }) {
            <Icon
               name='arrow-up'
               type='font-awesome-5'
-              color='cornflowerblue'
+              color="#F8F0DF"
               onPress={() => handleUpvotePress(post._id)}
               />
               
               <ListItem.Content>
                 
-                <ListItem.Title>{post.text}</ListItem.Title>
+                <ListItem.Title
+                  style={styles.title}
+                >{post.text}</ListItem.Title>
                 <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
@@ -107,7 +107,7 @@ export default function Group({ route, navigation }) {
             <Icon
               name='arrow-down'
               type='font-awesome-5'
-              color='cornflowerblue'
+              color="#F8F0DF"
               onPress={() => handleDownvotePress(post._id)}
             />
             </ListItem>
@@ -125,18 +125,20 @@ export default function Group({ route, navigation }) {
            <Icon
               name='arrow-up'
               type='font-awesome-5'
-              color='cornflowerblue'
+              color="#F8F0DF"
               onPress={() => handleUpvotePress(post._id)}
             />
             <ListItem.Content>
-              <ListItem.Title>{post.text}</ListItem.Title>
+                <ListItem.Title
+                  style={styles.title}
+                >{post.text}</ListItem.Title>
                 <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
               
             </ListItem.Content>
             <Icon
               name='arrow-down'
               type='font-awesome-5'
-              color='cornflowerblue'
+              color="#F8F0DF"
               onPress={() => handleDownvotePress(post._id)}
             />
           </ListItem>
@@ -145,9 +147,11 @@ export default function Group({ route, navigation }) {
       })}
       </ScrollView>
     
-      <View style={styles.button}>
+      <View style={styles.buttonContainer}>
         <Button
           title="New Post"
+          titleStyle={{color: '#79B4B7'}}
+          buttonStyle={styles.button}
           onPress={() => newPostPress()}
         />
     </View>
@@ -162,15 +166,22 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
+    backgroundColor: '#9D9D9D'
   },
   button: {
-    marginBottom: 5
+    backgroundColor: '#FEFBF3',
+    
+  },
+  buttonContainer: {
+    margin: 5
   },
   postContainer: {
-    backgroundColor: '#f7d260',
+    backgroundColor: '#79B4B7',
     width: 350,
     margin: 10,
     borderRadius: 35,
-    
+  },
+  title: {
+    color: '#FEFBF3',
   }
 })
