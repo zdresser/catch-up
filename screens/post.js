@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Linking } from 'react-native'
 import {Card} from 'react-native-elements'
 import { useDispatch, useSelector } from "react-redux";
 import { getPostAsync, getPreviewAsync } from '../redux/postSlice'
-import axios from 'axios'
+
 
 
 export default function Post({ navigation, route }) {
@@ -11,9 +11,6 @@ export default function Post({ navigation, route }) {
 
   const post = useSelector(state => state.post)
   
-  const [fetchedPost, setFetchedPost] = useState({
-   description: ''
-  })
   const dispatch = useDispatch();
   
   useEffect(() => {

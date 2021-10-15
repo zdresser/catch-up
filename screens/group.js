@@ -73,26 +73,34 @@ export default function Group({ route, navigation }) {
             containerStyle={styles.postContainer}
               onPress={() => handlePostPress(post._id)}
             key={post._id}
-          >
+            >
+              
            <Icon
               name='arrow-up'
               type='font-awesome-5'
               color='cornflowerblue'
               onPress={() => handleUpvotePress(post._id)}
-            />
-            <ListItem.Content>
-              <ListItem.Title>{post.text}</ListItem.Title>
-              <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
-                
-              <ListItem.Subtitle>
-                {post.preview.title}
-              </ListItem.Subtitle>
-              <ListItem.Subtitle>
-                {post.preview.description.substring(0, 100)}
-              </ListItem.Subtitle>
-              <Image
-                source={{ uri: post.preview.image }}
               />
+              
+              <ListItem.Content>
+                
+                <ListItem.Title>{post.text}</ListItem.Title>
+                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
+                  
+                <ListItem.Subtitle>
+                  {post.preview.title}
+                </ListItem.Subtitle>
+                <ListItem.Subtitle>
+                  {post.preview.description.substring(0, 100)}
+                </ListItem.Subtitle>
+                <Image
+                    source={{ uri: post.preview.image }}
+                    style={{
+                      height: 250,
+                      width: 250
+                      // this doesn't show up!!!
+                    }}
+                />
 
               </ListItem.Content>
               
@@ -160,8 +168,9 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     backgroundColor: '#f7d260',
-    width: 300,
+    width: 350,
     margin: 10,
-    borderRadius:35
+    borderRadius: 35,
+    
   }
 })
