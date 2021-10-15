@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
   
-  
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -85,7 +84,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} Posted by {post.authorName}{"\n"}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
                   {post.preview.title}
@@ -132,7 +131,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.authorName}{"\n"}</ListItem.Subtitle>
               
             </ListItem.Content>
             <Icon

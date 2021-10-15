@@ -9,7 +9,7 @@ export const loginAsync = createAsyncThunk(
    
     const data = {
       authenticated: true,
-      username: response.data.username || 'XXX',
+      username: response.data.username || 'ZD',
       groups: response.data.groups,
       _id: response.data._id
     }

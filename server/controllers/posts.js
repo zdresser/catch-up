@@ -21,6 +21,7 @@ exports.getPost = (req, res) => {
 }
 
 exports.addPost = async (req, res) => {
+  //to-do: save new post in User posts
   let previewData;
 
   if (req.body.link) {
@@ -39,7 +40,8 @@ exports.addPost = async (req, res) => {
       if (err) next(err)
 
       const newPost = new Post({
-        author: req.body.userId,
+        author: req.body.author,
+        authorName: req.body.authorName,
         text: req.body.text,
         group: group._id,
         comments: [],
@@ -47,7 +49,7 @@ exports.addPost = async (req, res) => {
         preview: previewData,
         upvotes: 0
       })
-      
+    
       newPost.save();
       group.posts.push(newPost);
       group.save();
