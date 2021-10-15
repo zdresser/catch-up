@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "User" },
   text: String,
+  link: String,
+  upvotes: Number,
+  preview: {},
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   group: { type: Schema.Types.ObjectId, ref: "Group" },
 },

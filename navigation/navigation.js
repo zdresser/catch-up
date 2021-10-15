@@ -26,14 +26,14 @@ export default function Navigation() {
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#f7d260'
+            backgroundColor: '#79B4B7'
           },
-          headerTintColor: 'cornflowerblue'
+          headerTintColor: '#FEFBF3'
         }}  
       >
         {user.authenticated ? (
         <>
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="CatchUp" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="Group" component={Group}
               options={{
