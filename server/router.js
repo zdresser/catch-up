@@ -91,8 +91,9 @@ module.exports = (app) => {
   app.post('/auth/login', Authentication.login);
   app.post('/auth/logout', Authentication.logout),
   app.post('/auth/signup', Authentication.signup),
-    app.get('/auth/current_user', Authentication.currentUser)
+  app.get('/auth/current_user', Authentication.currentUser)
   
+  app.post('/api/users/:user', Authentication.addToVoteRecord)
   app.put('/api/users/:user', Authentication.updateVotes)
   
 }

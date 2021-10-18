@@ -79,39 +79,41 @@ exports.signup = (req, res) => {
   });
 }
 
+exports.addToVoteRecord = (req, res) => {
+ 
+  User.findById(req.params.user)
+    .exec((err, user) => {
+      if (!user) {
+        res.status(404).send("User not found")
+      } else if (err) {
+        next(err)
+      }
+      
+      user.voteRecord.push({
+        post: req.body.post,
+        vote: req.body.vote
+      })
+
+      user.save();
+      res.status(200).send(user)
+    })
+}
+
 exports.updateVotes = (req, res) => {
-  //I have no idea how to do this. 
-  //find user 
-  //find post voted
-
-
-  // User.findOneAndUpdate({ _id: req.params.user },
-  // [{
-  //   $set: {
-  //     voteRecord: {
-  //       $cond: {
-  //         if: { $in: [req.body.post, "$voteRecord.post"] },
-  //         then: "$voteRecord",//idk how to update if it's in here,
-  //         else: {$concatArrays: ['$array', [{post: req.body.post, vote:req.body.vote}]]}
-  //       }
-  //     }
-  //   }}])
-    // { _id: req.params.user },
-    // { $set: { "voteRecord.$[el].vote": req.body.vote } },
-    // {
-    //   arrayFilters: [{ "el.post": req.body.post }],
-    //   new: true,
-    //   upsert: true
-    // })
-   
-      // .exec((err, user) => {
-      //   if (!user) {
-      //     res.status(404).send("User not found")
-      //   } else if (err) {
-      //     next(err)
-      //   }
-      //   console.log(user)
-        
-      // })
+  User.findOneAndUpdate({
+    _id: req.params.user,
+    "voteRecord.post": req.body.post
+  },
+  {
+    $set: {"voteRecord.$.vote" : req.body.vote }
+  },{new: true})
+    .exec((err, user) => {
+      if (!user) {
+        res.status(404).send("User not found")
+      } else if (err) {
+        next(err)
+      }
+      res.status(200).send(user)
+    })
 }
   

@@ -11,6 +11,7 @@ export const loginAsync = createAsyncThunk(
       authenticated: true,
       username: response.data.username || 'ZD',
       groups: response.data.groups,
+      voteRecord: response.data.voteRecord,
       _id: response.data._id
     }
     return {data}
@@ -27,8 +28,17 @@ export const addGroupAsync = createAsyncThunk(
   }
 )
 
-export const editVotesAsync = createAsyncThunk(
-  'user/editVotesAsync',
+export const addUserVoteAsync = createAsyncThunk(
+  'user/addUserVoteAsync',
+  async (addVoteObj) => {
+    const response = await axios.post(`http://192.168.4.62:5000/api/users/${addVoteObj.user}`, addVoteObj)
+    const data = response.data
+    return {data}
+  }
+)
+
+export const editUserVoteAsync = createAsyncThunk(
+  'user/editUserVoteAsync',
   async (editVotesObj) => {
     const response = await axios.put(`http://192.168.4.62:5000/api/users/${editVotesObj.user}`, editVotesObj)
 
@@ -42,7 +52,7 @@ const userSlice = createSlice({
     authenticated: false,
     username: null,
     groups: [],
-    
+    voteRecord: []
   },
   reducers: {},
   extraReducers: {
@@ -52,8 +62,11 @@ const userSlice = createSlice({
     [addGroupAsync.fulfilled]: (state, action) => {
       state.groups.push(action.payload.data)
     },
-    [editVotesAsync.fulfilled]: (state, action) => {
-      return action.payload.data //API should return whole user and this will replace the entire user state, including the changed vote values
+    [addUserVoteAsync.fulfilled]: (state, action) => {
+      state.voteRecord = action.payload.data.voteRecord
+    },
+    [editUserVoteAsync.fulfilled]: (state, action) => {
+      state.voteRecord = action.payload.data.voteRecord
     }
   }
 })
