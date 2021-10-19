@@ -19,6 +19,7 @@ exports.getComment = (req, res) => {
 }
 
 exports.addComment = (req, res) => {
+ 
   Post.findById(req.params.post)
     .exec((err, post) => {
       if (err) next(err)
@@ -28,9 +29,10 @@ exports.addComment = (req, res) => {
         author: req.body.userId,
         post: req.params.post
       })
-
+      
       newComment.save();
       post.comments.push(newComment);
+      
       post.save();
       res.status(200).send(newComment);
     })

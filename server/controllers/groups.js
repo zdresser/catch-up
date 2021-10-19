@@ -28,7 +28,7 @@ exports.addGroup = (req, res) => {
     return res.end();
   }
 
-  console.log(req.body)
+ 
 
   User.findById(req.body.creator)
     .exec((err, user) => {

@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
-const helmet = require('helmet');
 const passport = require("passport");
 const router = require('./router')
 const keys = require('./config/keys')
+const socketio = require('socket.io')
 
 
 mongoose.connect(keys.MONGODB_URI, () => {
@@ -20,4 +20,11 @@ router(app);
 
 const server = app.listen(5000, () => {
   console.log("Node.js listening on port " + 5000);
+})
+
+const io = socketio(server)
+app.set('io', io)
+
+io.on('connection', (socket) => {
+  console.log('Socket connected')
 })

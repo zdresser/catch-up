@@ -81,9 +81,9 @@ module.exports = (app) => {
   app.put('/api/posts/:post', Posts.editPost)
   app.delete('/api/posts/:post', Posts.deletePost)
 
-  app.get('/api/posts/:post/comments', Comments.getComments)
+  app.get('/api/posts/:post/comments', Comments.getComments) //unnecessary
   app.post('/api/posts/:post/comments', Comments.addComment)
-  app.get('/api/comments/:comment', Comments.getComment)
+  app.get('/api/comments/:comment', Comments.getComment) //unnecesary
   app.put('/api/comments/:comment', Comments.editComment)
   app.delete('/api/comments/:comment', Comments.deleteComment)
 

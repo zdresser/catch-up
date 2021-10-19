@@ -14,6 +14,7 @@ exports.getPosts = (req, res) => {
 
 exports.getPost = (req, res) => {
   Post.findById(req.params.post)
+    .populate('comments')
     .exec((err, post) => {
       if (err) next(err)
       res.status(200).json(post)
@@ -67,7 +68,7 @@ exports.editPost = (req, res) => {
   Post.findOneAndUpdate({ _id: req.params.post }, update, { new: true })
     .exec((err, updatedPost) => {
       if (err) next(err)
-      console.log(updatedPost)
+     
       res.status(200).json(updatedPost)
     })
 }

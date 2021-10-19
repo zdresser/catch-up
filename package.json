@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^1.6.2",
     "axios": "^0.23.0",
     "expo": "~43.0.0-beta.3",
+    "expo-secure-store": "~11.0.1",
     "expo-status-bar": "~1.1.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -26,7 +27,8 @@
     "react-redux": "^7.2.5",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
-    "expo-secure-store": "~11.0.1"
+    "socket.io": "^4.3.1",
+    "socket.io-client": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

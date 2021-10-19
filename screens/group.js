@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
   const user = useSelector(state => state.user)
-  console.log(user)
+
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -101,7 +101,10 @@ export default function Group({ route, navigation }) {
     <View style={styles.container}>
       <ScrollView>
         {group.posts.map((post) => {
-        
+          const date = new Date(post.createdAt)
+          const day = date.toLocaleDateString();
+          const time = post.createdAt.substring(11, 16)
+         
           if (post.link) {
             
           return (
@@ -125,7 +128,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.authorName}{"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.authorName} at {time} on {day}{"\n"}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
                   {post.preview.title}
@@ -172,7 +175,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.authorName}{"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.authorName} at {time} on {day}{"\n"}</ListItem.Subtitle>
               
             </ListItem.Content>
             <Icon
