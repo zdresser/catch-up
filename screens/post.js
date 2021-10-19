@@ -9,11 +9,11 @@ import socket from '../socket-connect' //actually being used despite grey
 
 export default function Post({ navigation, route }) {
   //use deep linking to launch link in appropriate app 
-  const [showCommentInput, setShowCommentInput] = useState(false);
+  
   const [newCommentText, setNewCommentText] = useState('');
   const user = useSelector(state => state.user)
   const post = useSelector(state => state.post);
-  console.log(post.comments)
+  
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -21,14 +21,23 @@ export default function Post({ navigation, route }) {
   }, [])
 
   const generateComments = () => {
+   
+
     return (
       post.comments.map(comment => {
+
+        // const date = new Date(comment.createdAt)
+        // const day = date.toLocaleDateString();
+        // const time = date.toLocaleTimeString()
+
         return (
           <ListItem
             bottomDivider
             containerStyle={styles.commentContainer}
+            key={comment._id}
           >
-          <Text>{comment.text}</Text>
+            <Text>{comment.author.userName}: {comment.text} </Text>
+            {/* <Text>{time} on {day}</Text> */}
           </ListItem>
         )
       })
@@ -51,6 +60,7 @@ export default function Post({ navigation, route }) {
   }
 
   const commentInput = () => {
+
     return (
       <TouchableWithoutFeedback onPress={() => {
         Keyboard.dismiss();

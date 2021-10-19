@@ -20,14 +20,7 @@ exports.login = (req, res) => {
       } else if (err) {
         next(err)
       }
-      console.log(user._id)
       res.status(200).send(user)
-      // res.send({
-      //   username: user.username,
-      //   token: tokenForUser(user),
-      //   groups: user.groups,
-      //   _id: user._id
-      // })
     })
 };
 
@@ -64,10 +57,11 @@ exports.signup = (req, res) => {
     }
 
     // If a user with email does NOT exist, create and save user record
-    const user = new User();
-
-    user.email = email;
-
+    const user = new User({
+      email: email,
+      userName: req.body.userName
+    });
+   
     user.setPassword(password);
 
     user.save((err, user) => {

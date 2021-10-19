@@ -14,7 +14,14 @@ exports.getPosts = (req, res) => {
 
 exports.getPost = (req, res) => {
   Post.findById(req.params.post)
-    .populate('comments')
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'author',
+        model: 'User',
+        select: 'userName'
+      }
+    })
     .exec((err, post) => {
       if (err) next(err)
       res.status(200).json(post)
@@ -54,7 +61,10 @@ exports.addPost = async (req, res) => {
       newPost.save();
       group.posts.push(newPost);
       group.save();
-      res.status(200).send(newPost);
+      newPost.populate('author', 'userName', (err) => {
+        res.status(200).send(newPost);
+      })
+      
     })
 }
 
