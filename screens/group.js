@@ -104,7 +104,7 @@ export default function Group({ route, navigation }) {
           // const date = new Date(post.createdAt)
           // const day = date.toLocaleDateString();
           // const time = post.createdAt.substring(11, 16)
-         
+        
           if (post.link) {
             
           return (
@@ -137,13 +137,13 @@ export default function Group({ route, navigation }) {
                   {post.preview.description.substring(0, 100)}
                 </ListItem.Subtitle>
 {/* Edit image so that the generic twitter one doesnt show? */}
-                <Image
-                    source={{ uri: post.preview.image }}
-                    style={{
-                      height: 250,
-                      width: 250
-                    }}
-                />
+                { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Image
+                  source={{ uri: post.preview.image }}
+                  style={{
+                    height: 250,
+                    width: 250
+                  }}
+                />}
 
               </ListItem.Content>
               

@@ -25,11 +25,6 @@ export default function Post({ navigation, route }) {
 
     return (
       post.comments.map(comment => {
-
-        // const date = new Date(comment.createdAt)
-        // const day = date.toLocaleDateString();
-        // const time = date.toLocaleTimeString()
-
         return (
           <ListItem
             bottomDivider
@@ -37,7 +32,7 @@ export default function Post({ navigation, route }) {
             key={comment._id}
           >
             <Text>{comment.author.userName}: {comment.text} </Text>
-            {/* <Text>{time} on {day}</Text> */}
+            
           </ListItem>
         )
       })
@@ -86,10 +81,11 @@ export default function Post({ navigation, route }) {
   if (post.link) {
     
     return (
-      // <TouchableWithoutFeedback onPress={() => {
-      //   Keyboard.dismiss();
-      //   }}>
+      
       <KeyboardAvoidingView style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => {
+        Keyboard.dismiss();
+        }}>
         <View style={styles.inner} >
        
         <Card
@@ -98,11 +94,11 @@ export default function Post({ navigation, route }) {
           <Card.Title>{post.preview.description.substring(0,200)}</Card.Title>
           <Text>{post.preview.title}</Text>
           
-          <Card.Image
-            source={{ uri: post.preview.image }}
-            style={{ height: 200 }}
-           onPress={() => Linking.openURL(post.preview.url)}
-          />
+              { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Card.Image
+                source={{ uri: post.preview.image }}
+                style={{ height: 200 }}
+                onPress={() => Linking.openURL(post.preview.url)}
+              />}
         </Card>
         <ScrollView style={styles.chatContainer}>
           {generateComments()}
@@ -110,6 +106,7 @@ export default function Post({ navigation, route }) {
         {commentInput()}
       
         </View>
+        </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
        
  
