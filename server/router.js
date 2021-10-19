@@ -50,6 +50,21 @@ app.param('comment', (req, res, next, id) => {
       next();
     })
 })
+// fetches user
+// app.param('user', (req, res, next, id) => {
+//   User.findById(id)
+//     .exec((err, user) => {
+//       if (!user) {
+//         res.status(404).send('User not found');
+//         return res.end();
+//       } else if (err) {
+//         next(err);
+//       }
+//       req.user = user;
+      
+//       next();
+//     })
+//   })
 
 //routes
 module.exports = (app) => {
@@ -66,9 +81,9 @@ module.exports = (app) => {
   app.put('/api/posts/:post', Posts.editPost)
   app.delete('/api/posts/:post', Posts.deletePost)
 
-  app.get('/api/posts/:post/comments', Comments.getComments)
+  app.get('/api/posts/:post/comments', Comments.getComments) //unnecessary
   app.post('/api/posts/:post/comments', Comments.addComment)
-  app.get('/api/comments/:comment', Comments.getComment)
+  app.get('/api/comments/:comment', Comments.getComment) //unnecesary
   app.put('/api/comments/:comment', Comments.editComment)
   app.delete('/api/comments/:comment', Comments.deleteComment)
 
@@ -77,4 +92,8 @@ module.exports = (app) => {
   app.post('/auth/logout', Authentication.logout),
   app.post('/auth/signup', Authentication.signup),
   app.get('/auth/current_user', Authentication.currentUser)
+  
+  app.post('/api/users/:user', Authentication.addToVoteRecord)
+  app.put('/api/users/:user', Authentication.updateVotes)
+  
 }

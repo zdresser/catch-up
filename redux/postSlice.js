@@ -19,6 +19,15 @@ export const editPost = createAsyncThunk(
   }
 )
 
+export const addComment = createAsyncThunk(
+  'post/addComment',
+  async (addCommentObj) => {
+    const response = await axios.post(`http://192.168.4.62:5000/api/posts/${addCommentObj.post}/comments`, addCommentObj)
+    const data = response.data;
+    return {data}
+  }
+)
+
 const postSlice = createSlice({
   name: "post",
   initialState: {
@@ -36,8 +45,9 @@ const postSlice = createSlice({
     [editPost.fulfilled]: (state, action) => {
       //todo
     },
-    
-    
+    [addComment.fulfilled]: (state, action) => {
+      state.comments.push(action.payload.data)
+    }
   }
 })
 

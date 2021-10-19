@@ -20,11 +20,14 @@ exports.login = (req, res) => {
       } else if (err) {
         next(err)
       }
-      res.send({
-        username: user.username,
-        token: tokenForUser(user),
-        groups: user.groups
-      })
+      console.log(user._id)
+      res.status(200).send(user)
+      // res.send({
+      //   username: user.username,
+      //   token: tokenForUser(user),
+      //   groups: user.groups,
+      //   _id: user._id
+      // })
     })
 };
 
@@ -75,3 +78,42 @@ exports.signup = (req, res) => {
     });
   });
 }
+
+exports.addToVoteRecord = (req, res) => {
+ 
+  User.findById(req.params.user)
+    .exec((err, user) => {
+      if (!user) {
+        res.status(404).send("User not found")
+      } else if (err) {
+        next(err)
+      }
+      
+      user.voteRecord.push({
+        post: req.body.post,
+        vote: req.body.vote
+      })
+
+      user.save();
+      res.status(200).send(user)
+    })
+}
+
+exports.updateVotes = (req, res) => {
+  User.findOneAndUpdate({
+    _id: req.params.user,
+    "voteRecord.post": req.body.post
+  },
+  {
+    $set: {"voteRecord.$.vote" : req.body.vote }
+  },{new: true})
+    .exec((err, user) => {
+      if (!user) {
+        res.status(404).send("User not found")
+      } else if (err) {
+        next(err)
+      }
+      res.status(200).send(user)
+    })
+}
+  

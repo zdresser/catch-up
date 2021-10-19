@@ -5,24 +5,21 @@ const crypto = require('crypto');
 const userSchema = new Schema({
   username: {
     type: String,
-   
   },
   email: {
     type: String,
-    
   },
   password: {
     type: String,
-   
   },
   phone: {
     type: String,
-    
   },
   voteRecord: [{
     post: String,
     vote: Number
   }],
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   groups: [{ type: Schema.Types.ObjectId, ref: "Group" }],
 })

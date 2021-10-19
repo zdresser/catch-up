@@ -2,12 +2,13 @@ import React, {useEffect} from 'react';
 import { StyleSheet, View, Text,   ScrollView, Linking } from 'react-native'
 import {ListItem, Button, Icon, Image} from 'react-native-elements'
 import { getGroupAsync, editPostVotes, sortPostsByUpvotes } from '../redux/groupSlice'
+import {addUserVoteAsync, editUserVoteAsync} from '../redux/userSlice'
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
-  
-  
+  const user = useSelector(state => state.user)
+
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -25,11 +26,31 @@ export default function Group({ route, navigation }) {
   const newPostPress = () => {
     navigation.navigate('NewPost', {group: group._id})
   }
-  const handleUpvotePress = (id) => {
-    //check for previous vote
-    
 
-    //edit vote count
+  const handleUpvotePress = (id) => {
+    
+    //check for previous vote
+    if (user.voteRecord.some(record => record.post === id)) {
+      //find obj in voteRecord array
+      const postVoteRecord = user.voteRecord.find(record => record.post === id);
+      //check to see if vote === 1
+      if (postVoteRecord.vote === 1) {
+        return alert("You've already upvoted this post")
+      }
+      dispatch(editUserVoteAsync({
+        user: user._id,
+        post: id,
+        vote: postVoteRecord.vote + 1
+      }))
+    } else {
+      //dispatch addUserVoteAsync
+      dispatch(addUserVoteAsync({
+        user: user._id,
+        post: id,
+        vote: 1
+      }))
+    }
+   
     const post = group.posts.find(({ _id }) => _id === id)
   
     const votes = post.upvotes + 1
@@ -38,12 +59,31 @@ export default function Group({ route, navigation }) {
       post: id,
       upvotes: votes
     }))
-
-    //update user to show that they have voted
-    
   }
 
   const handleDownvotePress = (id) => {
+    if (user.voteRecord.some(record => record.post === id)) {
+      //find obj in voteRecord array
+      const postVoteRecord = user.voteRecord.find(record => record.post === id);
+      //check to see if vote === 1
+      if (postVoteRecord.vote === -1) {
+        return alert("You've already downvoted this post")
+      }
+      
+      //dispatch editUserVoteAsync
+      dispatch(editUserVoteAsync({
+        user: user._id,
+        post: id,
+        vote: postVoteRecord.vote - 1
+      }))
+    } else {
+      //dispatch addUserVoteAsync
+      dispatch(addUserVoteAsync({
+        user: user._id,
+        post: id,
+        vote: -1
+      }))
+    }
     const post = group.posts.find(({ _id }) => _id === id)
   
     const votes = post.upvotes - 1
@@ -61,7 +101,10 @@ export default function Group({ route, navigation }) {
     <View style={styles.container}>
       <ScrollView>
         {group.posts.map((post) => {
-        
+          const date = new Date(post.createdAt)
+          const day = date.toLocaleDateString();
+          const time = post.createdAt.substring(11, 16)
+         
           if (post.link) {
             
           return (
@@ -85,7 +128,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.authorName} at {time} on {day}{"\n"}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
                   {post.preview.title}
@@ -93,12 +136,12 @@ export default function Group({ route, navigation }) {
                 <ListItem.Subtitle>
                   {post.preview.description.substring(0, 100)}
                 </ListItem.Subtitle>
+{/* Edit image so that the generic twitter one doesnt show? */}
                 <Image
                     source={{ uri: post.preview.image }}
                     style={{
                       height: 250,
                       width: 250
-                      // this doesn't show up!!!
                     }}
                 />
 
@@ -132,7 +175,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle style={{ textDecorationLine: 'underline' }}>Votes: {post.upvotes} {"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.authorName} at {time} on {day}{"\n"}</ListItem.Subtitle>
               
             </ListItem.Content>
             <Icon

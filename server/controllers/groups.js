@@ -12,13 +12,6 @@ exports.getGroups = (req, res) => {
 exports.getGroup = (req, res, next) => {
   Group.findById(req.params.group)
     .populate('posts')
-    .populate({
-      path: 'posts',
-      populate: {
-        path: 'author',
-        model: 'User'
-      }
-    })
     .exec((err, group) => {
       if (!group) {
         res.status(404).send("Group not found")
@@ -35,15 +28,18 @@ exports.addGroup = (req, res) => {
     return res.end();
   }
 
-  User.findById(req.body.userId)
+ 
+
+  User.findById(req.body.creator)
     .exec((err, user) => {
       const newGroup = new Group({
         title: req.body.title,
+        creator: req.body.creator,
         users: [],
         posts: []
       })
       
-      newGroup.users.push(user._id);
+      newGroup.users.push(req.body.creator);
       newGroup.save()
       user.groups.push(newGroup);
       user.save();

@@ -11,7 +11,8 @@ import Post from '../screens/post';
 import Group from '../screens/group';
 import Login from '../screens/login';
 import Signup from '../screens/signup';
-import NewPost from '../screens/newPost'
+import NewPost from '../screens/newPost';
+import NewGroup from '../screens/newGroup';
 import Loading from '../screens/loading';
 
 const Stack = createNativeStackNavigator();
@@ -22,7 +23,6 @@ export default function Navigation() {
   
   return (
     <NavigationContainer>
-      {/* <Header /> */}
       <Stack.Navigator
         screenOptions={{
           headerStyle: {
@@ -41,7 +41,8 @@ export default function Navigation() {
               }}
             />
           <Stack.Screen name="Post" component={Post} />
-          <Stack.Screen name="NewPost" component={NewPost} />
+            <Stack.Screen name="NewPost" component={NewPost} />
+            <Stack.Screen name="NewGroup" component={NewGroup} />
         </>
         ) : (
         <>

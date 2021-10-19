@@ -6,6 +6,7 @@ const groupSchema = new Schema({
   title: String,
   users: [{ type: Schema.Types.ObjectId, ref: "User" }],
   posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  creator: { type: Schema.Types.ObjectId, ref: "User" }
 })
 
 groupSchema.pre('deleteOne', { document: false, query: true }, async function (next) {
