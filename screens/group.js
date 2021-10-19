@@ -101,10 +101,10 @@ export default function Group({ route, navigation }) {
     <View style={styles.container}>
       <ScrollView>
         {group.posts.map((post) => {
-          const date = new Date(post.createdAt)
-          const day = date.toLocaleDateString();
-          const time = post.createdAt.substring(11, 16)
-         
+          // const date = new Date(post.createdAt)
+          // const day = date.toLocaleDateString();
+          // const time = post.createdAt.substring(11, 16)
+        
           if (post.link) {
             
           return (
@@ -128,7 +128,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.authorName} at {time} on {day}{"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.author.userName}{"\n"}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
                   {post.preview.title}
@@ -137,13 +137,13 @@ export default function Group({ route, navigation }) {
                   {post.preview.description.substring(0, 100)}
                 </ListItem.Subtitle>
 {/* Edit image so that the generic twitter one doesnt show? */}
-                <Image
-                    source={{ uri: post.preview.image }}
-                    style={{
-                      height: 250,
-                      width: 250
-                    }}
-                />
+                { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Image
+                  source={{ uri: post.preview.image }}
+                  style={{
+                    height: 250,
+                    width: 250
+                  }}
+                />}
 
               </ListItem.Content>
               
@@ -175,7 +175,7 @@ export default function Group({ route, navigation }) {
                 <ListItem.Title
                   style={styles.title}
                 >{post.text}</ListItem.Title>
-                <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.authorName} at {time} on {day}{"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.author.userName} {"\n"}</ListItem.Subtitle>
               
             </ListItem.Content>
             <Icon

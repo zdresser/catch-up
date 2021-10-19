@@ -32,7 +32,8 @@ export const editPostVotes = createAsyncThunk(
 const groupSlice = createSlice({
   name: "group",
   initialState: {
-    posts: []
+    posts: [],
+    createdAt: ''
   },
   reducers: {
     sortPostsByUpvotes(state, action) {

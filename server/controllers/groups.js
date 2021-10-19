@@ -11,7 +11,14 @@ exports.getGroups = (req, res) => {
 
 exports.getGroup = (req, res, next) => {
   Group.findById(req.params.group)
-    .populate('posts')
+    .populate({
+      path: 'posts',
+      populate: {
+        path: 'author',
+        model: 'User',
+        select: 'userName'
+      }
+    })
     .exec((err, group) => {
       if (!group) {
         res.status(404).send("Group not found")

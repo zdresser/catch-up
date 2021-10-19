@@ -26,15 +26,20 @@ exports.addComment = (req, res) => {
 
       const newComment = new Comment({
         text: req.body.text,
-        author: req.body.userId,
+        author: req.body.author,
         post: req.params.post
       })
       
-      newComment.save();
-      post.comments.push(newComment);
+      newComment.save()
       
+      post.comments.push(newComment);
       post.save();
-      res.status(200).send(newComment);
+      newComment.populate('author', 'userName', (err) => {
+        
+        req.app.get('io').emit('newComment', newComment)
+        res.status(200).send(newComment);
+      })
+      
     })
 }
 

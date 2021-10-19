@@ -9,11 +9,11 @@ import socket from '../socket-connect' //actually being used despite grey
 
 export default function Post({ navigation, route }) {
   //use deep linking to launch link in appropriate app 
-  const [showCommentInput, setShowCommentInput] = useState(false);
+  
   const [newCommentText, setNewCommentText] = useState('');
   const user = useSelector(state => state.user)
   const post = useSelector(state => state.post);
-  console.log(post.comments)
+  
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -21,14 +21,18 @@ export default function Post({ navigation, route }) {
   }, [])
 
   const generateComments = () => {
+   
+
     return (
       post.comments.map(comment => {
         return (
           <ListItem
             bottomDivider
             containerStyle={styles.commentContainer}
+            key={comment._id}
           >
-          <Text>{comment.text}</Text>
+            <Text>{comment.author.userName}: {comment.text} </Text>
+            
           </ListItem>
         )
       })
@@ -51,6 +55,7 @@ export default function Post({ navigation, route }) {
   }
 
   const commentInput = () => {
+
     return (
       <TouchableWithoutFeedback onPress={() => {
         Keyboard.dismiss();
@@ -76,10 +81,11 @@ export default function Post({ navigation, route }) {
   if (post.link) {
     
     return (
-      // <TouchableWithoutFeedback onPress={() => {
-      //   Keyboard.dismiss();
-      //   }}>
+      
       <KeyboardAvoidingView style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => {
+        Keyboard.dismiss();
+        }}>
         <View style={styles.inner} >
        
         <Card
@@ -88,11 +94,11 @@ export default function Post({ navigation, route }) {
           <Card.Title>{post.preview.description.substring(0,200)}</Card.Title>
           <Text>{post.preview.title}</Text>
           
-          <Card.Image
-            source={{ uri: post.preview.image }}
-            style={{ height: 200 }}
-           onPress={() => Linking.openURL(post.preview.url)}
-          />
+              { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Card.Image
+                source={{ uri: post.preview.image }}
+                style={{ height: 200 }}
+                onPress={() => Linking.openURL(post.preview.url)}
+              />}
         </Card>
         <ScrollView style={styles.chatContainer}>
           {generateComments()}
@@ -100,6 +106,7 @@ export default function Post({ navigation, route }) {
         {commentInput()}
       
         </View>
+        </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
        
  
