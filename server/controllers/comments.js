@@ -34,7 +34,9 @@ exports.addComment = (req, res) => {
       
       post.comments.push(newComment);
       post.save();
-      newComment.populate('author', 'userName',(err) => {
+      newComment.populate('author', 'userName', (err) => {
+        
+        req.app.get('io').emit('newComment', newComment)
         res.status(200).send(newComment);
       })
       
