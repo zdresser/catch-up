@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const passport = require('passport');
 
-
 //import models
 const Comment = require('./models/comment')
 const User = require('./models/user')
@@ -19,60 +18,64 @@ const Authentication = require('./controllers/authentication')
 const requireAuth = passport.authenticate('jwt', { session: false });
 const requireSignin = passport.authenticate('local', { session: false });
 
-//fetches a post
-app.param('post', (req, res, next, id) => {
-  Post.findById(id)
-    .exec((err, post) => {
-      if (!post) {
-        res.status(404).send('Post not found');
-        return res.end();
-      } else if (err) {
-        next(err);
-      }
-
-      req.post = post;
-      next();
-    })
-})
-
-//fetches a comment
-app.param('comment', (req, res, next, id) => {
-  Comment.findById(id)
-    .exec((err, comment) => {
-      if (!comment) {
-        res.status(404).send('Comment not found');
-        return res.end();
-      } else if (err) {
-        next(err);
-      }
-
-      req.comment = comment;
-      next();
-    })
-})
-// fetches user
-// app.param('user', (req, res, next, id) => {
-//   User.findById(id)
-//     .exec((err, user) => {
-//       if (!user) {
-//         res.status(404).send('User not found');
-//         return res.end();
-//       } else if (err) {
-//         next(err);
-//       }
-//       req.user = user;
-      
-//       next();
-//     })
-//   })
-
 //routes
 module.exports = (app) => {
-  app.get('/api/groups', Groups.getGroups)
+//fetches a group
+
+  app.param('group', (req, res, next, id) => {
+   
+    Group.findById(id)
+      .exec((err, group) => {
+        if (!group) {
+          res.status(404).send('Group not found');
+          return res.end();
+        } else if (err) {
+          next(err)
+        }
+        
+        req.group = group;
+        next();
+      })
+  })
+  
+  //fetches a post
+  app.param('post', (req, res, next, id) => {
+    Post.findById(id)
+      .exec((err, post) => {
+        if (!post) {
+          res.status(404).send('Post not found');
+          return res.end();
+        } else if (err) {
+          next(err);
+        }
+  
+        req.post = post;
+        next();
+      })
+  })
+  
+  //fetches a comment
+  app.param('comment', (req, res, next, id) => {
+    Comment.findById(id)
+      .exec((err, comment) => {
+        if (!comment) {
+          res.status(404).send('Comment not found');
+          return res.end();
+        } else if (err) {
+          next(err);
+        }
+  
+        req.comment = comment;
+        next();
+      })
+  })
+
   app.get("/api/groups/:group", Groups.getGroup)
   app.post('/api/groups', Groups.addGroup)
   app.put('/api/groups/:group', Groups.editGroup)
   app.delete('/api/groups/:group', Groups.deleteGroup)
+  app.post('/api/groups/:group/add', Groups.addUserToGroup)
+
 
   app.get('/api/groups/:group/posts', Posts.getPosts)
   app.post('/api/groups/:group/posts', Posts.addPost)

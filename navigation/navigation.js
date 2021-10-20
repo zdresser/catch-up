@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {useSelector} from 'react-redux'
 
 //component and screen imports
-import Header from '../components/header';
+
 import Home from '../screens/home';
 import Profile from '../screens/profile';
 import Post from '../screens/post';
@@ -13,7 +13,7 @@ import Login from '../screens/login';
 import Signup from '../screens/signup';
 import NewPost from '../screens/newPost';
 import NewGroup from '../screens/newGroup';
-import Loading from '../screens/loading';
+import AddUserToGroup from '../screens/addUserToGroup'
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +43,7 @@ export default function Navigation() {
           <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="NewPost" component={NewPost} />
             <Stack.Screen name="NewGroup" component={NewGroup} />
+            <Stack.Screen name="AddUserToGroup" component={AddUserToGroup} />
         </>
         ) : (
         <>

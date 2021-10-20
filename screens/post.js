@@ -21,8 +21,6 @@ export default function Post({ navigation, route }) {
   }, [])
 
   const generateComments = () => {
-   
-
     return (
       post.comments.map(comment => {
         return (

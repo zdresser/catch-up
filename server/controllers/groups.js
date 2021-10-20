@@ -1,14 +1,6 @@
 const User = require('../models/user')
 const Group = require('../models/group')
 
-exports.getGroups = (req, res) => {
-  Group.find({}) //edit when users are added
-    .exec((err, groups) => {
-      if (err) return next(err);
-      res.status(200).json(groups);
-    });
-}
-
 exports.getGroup = (req, res, next) => {
   Group.findById(req.params.group)
     .populate({
@@ -34,9 +26,6 @@ exports.addGroup = (req, res) => {
     res.status(400).send("No title included in request body")
     return res.end();
   }
-
- 
-
   User.findById(req.body.creator)
     .exec((err, user) => {
       const newGroup = new Group({
@@ -69,5 +58,29 @@ exports.deleteGroup = (req, res) => {
     .exec(err => {
       if (err) next(err)
       res.status(200).send(req.params.board)
+    })
+}
+
+exports.addUserToGroup = (req, res) => {
+
+  User.findOne({ email: req.body.email })
+    .exec((err, user) => {
+      if (!user) {
+        res.status(404).send('User not found');
+        return res.end();
+      } else if (err) {
+        next(err)
+      }
+      //check to see if user is already in group
+      if (req.group.users.includes(user._id)) {
+        res.status(400).send('User already in group')
+        return res.end()
+      }
+
+      req.group.users.push(user._id)
+      req.group.save()
+      user.groups.push(req.group._id)
+      user.save()
+      res.status(200).send(user.email)
     })
 }
