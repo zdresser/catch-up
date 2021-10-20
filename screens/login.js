@@ -1,28 +1,25 @@
 import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loginAsync } from '../redux/userSlice';
-import { StyleSheet, Platform, TouchableWithoutFeedback, Keyboard, View } from 'react-native'
-import { colors, ThemeProvider, Input, Button } from 'react-native-elements';
+import { StyleSheet, Text, TouchableWithoutFeedback, Keyboard, View } from 'react-native'
+import { Input, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useState } from "react";
+import {Formik} from 'formik'
+import * as yup from 'yup'
 
+const loginValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Enter a valid email address")
+    .required('Email is required'),
+  password: yup
+    .string()
+    .required('Password is required')
+})
 
 export default function Login({navigation}) {
-  const user = useSelector(state => state.user)
- 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
   const dispatch = useDispatch();
- 
-  const submitLogin = async () => {
-    dispatch(loginAsync({
-      email: email,
-      password: password
-    }))
-    
-    // navigation.navigate('Home')
-  }
 
   const navigateToSignup = () => {
     navigation.navigate('Signup')
@@ -34,25 +31,48 @@ export default function Login({navigation}) {
       Keyboard.dismiss();
       }}>
       <View>
+        <Formik
+          validationSchema={loginValidationSchema}
+          initialValues={{ email: '', password: '' }}
+          onSubmit={values => dispatch(loginAsync(
+            values
+          ))}
+          validateOnChange={false}
+          validateOnBlur={false}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
+            <>
       <Input
         placeholder="email@address.com"
         leftIcon={{ type: 'font-awesome', name: 'envelope' }}
         label="Email Address"
-        onChangeText={text => setEmail(text)}          
-      />
+        onChangeText={handleChange('email')}
+        onBlur={handleBlur('email')}
+        value={values.email}
+        keyboardType="email-address"        
+              />
+        {errors.email &&
+         <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+       }
       <Input
         placeholder="password"
         leftIcon={{ type: 'font-awesome', name: "lock" }}
         label="Password"
         secureTextEntry={true}
-        onChangeText={text => setPassword(text)}
+        onChangeText={handleChange('password')}
+        onBlur={handleBlur('password')}
+        value={values.password}
       />
+        {errors.password &&
+         <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+       }
       <Button
         title="Submit"
         type='outline'
         buttonStyle={styles.button}
         containerStyle={styles.container}
-        onPress={submitLogin}
+        onPress={handleSubmit}
+        disabled={!isValid}
         />
     
       <Button
@@ -62,10 +82,12 @@ export default function Login({navigation}) {
         containerStyle={styles.container}
         onPress={navigateToSignup}
       />
-     
+            </>
+          )}
+      
+     </Formik>
       </View>
-    </TouchableWithoutFeedback>
-    
+    </TouchableWithoutFeedback>    
   )
 }
 
