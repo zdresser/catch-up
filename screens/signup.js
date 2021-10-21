@@ -25,10 +25,6 @@ const signupValidationSchema = yup.object().shape({
 export default function Signup() {
   const dispatch = useDispatch();
 
-  const submitNewUser = () => {
-    console.log('new user')
-  }
-
   return (
     <TouchableWithoutFeedback onPress={() => {
       Keyboard.dismiss();

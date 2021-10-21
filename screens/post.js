@@ -1,6 +1,6 @@
 
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, Text, Linking,TouchableWithoutFeedback, Keyboard, ScrollView, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, View, Text, Linking,TouchableWithoutFeedback, Keyboard, ScrollView, FlatList, KeyboardAvoidingView } from 'react-native'
 import {Card, ListItem, Button, Input, Icon} from 'react-native-elements'
 import { useDispatch, useSelector } from "react-redux";
 import { getPostAsync, addComment } from '../redux/postSlice'
@@ -21,7 +21,7 @@ export default function Post({ navigation, route }) {
   }, [])
 
   const generateComments = () => {
-    return (
+     return (
       post.comments.map(comment => {
         return (
           <ListItem
@@ -81,7 +81,9 @@ export default function Post({ navigation, route }) {
     return (
       
       <KeyboardAvoidingView style={styles.container}>
-        <TouchableWithoutFeedback onPress={() => {
+        <TouchableWithoutFeedback
+          style={{flex:1}}
+          onPress={() => {
         Keyboard.dismiss();
         }}>
         <View style={styles.inner} >
@@ -98,20 +100,35 @@ export default function Post({ navigation, route }) {
                 onPress={() => Linking.openURL(post.preview.url)}
               />}
         </Card>
-        <ScrollView style={styles.chatContainer}>
-          {generateComments()}
-        </ScrollView>
+          <FlatList
+            contentContainerStyle={styles.chatContainer}
+            data={post.comments}
+            keyExtractor={item => item._id}
+            renderItem={({ item }) => {
+              <ListItem
+                bottomDivider
+                containerStyle={styles.commentContainer}
+                key={item._id}
+              >
+                <ListItem.Subtitle >{item.author.userName}</ListItem.Subtitle>
+                <ListItem.Title>{item.text}</ListItem.Title>
+                
+              </ListItem>
+            }}
+          />
+
         {commentInput()}
       
         </View>
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-       
- 
+        
     )
   } else {
     return (
-      <TouchableWithoutFeedback onPress={() => {
+      <TouchableWithoutFeedback
+        style={{flex: 1}}
+        onPress={() => {
         Keyboard.dismiss();
         }}>
         <View style={styles.container}>
@@ -120,11 +137,25 @@ export default function Post({ navigation, route }) {
             containerStyle={styles.post}
           >
             <Card.Title>{post.text}</Card.Title>
-        </Card>
-        <ScrollView style={styles.chatContainer}>
-            {generateComments()}
-           
-        </ScrollView>
+          </Card>
+          {/* adding another parent view here with flex 1 doesnt help */}
+          <FlatList
+            style={{flex:1}}
+            contentContainerStyle={styles.chatContainer}
+            data={post.comments}
+            keyExtractor={item => item._id}
+            renderItem={({ item }) => (
+              <ListItem
+                bottomDivider
+                containerStyle={styles.commentContainer}
+                key={item._id}
+              >
+                 <ListItem.Subtitle >{item.author.userName}</ListItem.Subtitle>
+                <ListItem.Title>{item.text}</ListItem.Title>
+              </ListItem>
+          )}
+          />
+   
        {commentInput()}
        
       </View>
@@ -135,19 +166,18 @@ export default function Post({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
     flex: 1,
+    paddingTop: 10,
     alignItems: 'center',
     backgroundColor: '#9D9D9D'
   },
   chatContainer: {
-    flex: 2,
+    flex:1,
     padding: 20,
     width: 350,
     marginTop: 5,
     marginBottom: 10,
     borderRadius: 5,
-   
     backgroundColor: "#F8F0DF"
   },
   commentContainer: {

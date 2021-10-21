@@ -76,8 +76,7 @@ module.exports = (app) => {
   app.delete('/api/groups/:group', Groups.deleteGroup)
   app.post('/api/groups/:group/add', Groups.addUserToGroup)
 
-
-  app.get('/api/groups/:group/posts', Posts.getPosts)
+  app.get('/api/groups/:group/posts', Posts.getPosts)//delete?
   app.post('/api/groups/:group/posts', Posts.addPost)
 
   app.get('/api/posts/:post', Posts.getPost)
@@ -90,7 +89,6 @@ module.exports = (app) => {
   app.put('/api/comments/:comment', Comments.editComment)
   app.delete('/api/comments/:comment', Comments.deleteComment)
 
-
   app.post('/auth/login', Authentication.login);
   app.post('/auth/logout', Authentication.logout),
   app.post('/auth/signup', Authentication.signup),
@@ -99,4 +97,31 @@ module.exports = (app) => {
   app.post('/api/users/:user', Authentication.addToVoteRecord)
   app.put('/api/users/:user', Authentication.updateVotes)
   
+
+  const moment = require('moment')
+  const today = moment().startOf('day')
+
+ //find group updated today
+  Group.find({
+    updatedAt: {
+      $gte: today.toDate(),
+      $lte: moment(today).endOf('day').toDate()
+    }
+  }) 
+    .populate('posts')
+    .populate("users", "phone")
+    .exec((err, groups) => {
+
+      groups.forEach(group => {
+        const posts = group.posts.filter(post => post.createdAt >= today.toDate())
+        posts.sort((a, b) => (a.upVotes > b.upvotes) ? 1 : -1)
+        const topPost = posts[0]
+
+        const groupText = group.users.map(user => user.phone)
+        
+
+        //send out topPost to groupText
+      })
+      
+    })
 }

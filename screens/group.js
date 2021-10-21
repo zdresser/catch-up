@@ -131,6 +131,7 @@ export default function Group({ route, navigation }) {
                   style={styles.title}
                 >{post.text}</ListItem.Title>
                 <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.author.userName}{"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle>Comments: {post.comments.length}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
                   {post.preview.title}
@@ -178,7 +179,7 @@ export default function Group({ route, navigation }) {
                   style={styles.title}
                 >{post.text}</ListItem.Title>
                 <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.author.userName} {"\n"}</ListItem.Subtitle>
-              
+                <ListItem.Subtitle>Comments: {post.comments.length}</ListItem.Subtitle>
             </ListItem.Content>
             <Icon
               name='arrow-down'
