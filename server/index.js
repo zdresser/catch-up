@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
@@ -6,6 +7,8 @@ const router = require('./router')
 const keys = require('./config/keys')
 const socketio = require('socket.io')
 
+const Text = require('./services/groupText')
+const schedule = require('node-schedule')
 
 mongoose.connect(keys.MONGODB_URI, () => {
   console.log("connected to database");
@@ -27,4 +30,9 @@ app.set('io', io)
 
 io.on('connection', (socket) => {
   console.log('Socket connected')
+})
+
+//send group text daily at 11:00 p.m.
+schedule.scheduleJob('0 0 23 ? * * *', () => {
+  Text.groupText()
 })

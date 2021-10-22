@@ -1,11 +1,16 @@
 
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, Text, Linking,TouchableWithoutFeedback, Keyboard, ScrollView, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, View, Text, Linking,TouchableWithoutFeedback, Keyboard, ScrollView, FlatList, KeyboardAvoidingView } from 'react-native'
 import {Card, ListItem, Button, Input, Icon} from 'react-native-elements'
 import { useDispatch, useSelector } from "react-redux";
 import { getPostAsync, addComment } from '../redux/postSlice'
 import socket from '../socket-connect' //actually being used despite grey
 
+//for future feedback from mazen create a pull request on my branch and invite him then share link in Slack
+// <Wrapper item={item}>{...commentInput()...}</Wrapper>
+// const Wrapper = ({item, children}) => (
+//   item.link ? <TouchableWithoutFeedback>{children}</TouchableWithoutFeedback> : <View>{children}</View>
+// );
 
 export default function Post({ navigation, route }) {
   //use deep linking to launch link in appropriate app 
@@ -19,25 +24,6 @@ export default function Post({ navigation, route }) {
   useEffect(() => {
     dispatch(getPostAsync(route.params.post))    
   }, [])
-
-  const generateComments = () => {
-   
-
-    return (
-      post.comments.map(comment => {
-        return (
-          <ListItem
-            bottomDivider
-            containerStyle={styles.commentContainer}
-            key={comment._id}
-          >
-            <Text>{comment.author.userName}: {comment.text} </Text>
-            
-          </ListItem>
-        )
-      })
-    )
-  }
 
   const submitComment = () => {
     if (!newCommentText) {
@@ -54,12 +40,9 @@ export default function Post({ navigation, route }) {
     Keyboard.dismiss()
   }
 
-  const commentInput = () => {
-
+  const CommentInput = () => {
+//when used as a component this causes funky problems with the keyboard. why??
     return (
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        }}>
       <View style={styles.newCommentContainer}>
           <Input
           value={newCommentText}
@@ -69,23 +52,39 @@ export default function Post({ navigation, route }) {
             <Icon
             type= 'font-awesome-5'
             name= 'paper-plane'
-            onPress={() => submitComment()}
-          />
+            onPress={submitComment}
+            />
           }
         />
-        </View>
-        </TouchableWithoutFeedback>
+      </View>
     )
+  }
+
+  const CommentListItem = ({ item }) => {
+    return (
+      <ListItem
+      bottomDivider
+      containerStyle={styles.commentContainer}
+      key={item._id}
+    >
+      <ListItem.Subtitle >{item.author.userName}</ListItem.Subtitle>
+      <ListItem.Title>{item.text}</ListItem.Title>
+      
+    </ListItem>
+    ) 
   }
 
   if (post.link) {
     
     return (
       
-      <KeyboardAvoidingView style={styles.container}>
-        <TouchableWithoutFeedback onPress={() => {
+      <KeyboardAvoidingView
+        onPress={() => {
         Keyboard.dismiss();
-        }}>
+        }}
+        style={styles.container}
+      >
+        
         <View style={styles.inner} >
        
         <Card
@@ -96,61 +95,70 @@ export default function Post({ navigation, route }) {
           
               { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Card.Image
                 source={{ uri: post.preview.image }}
-                style={{ height: 200 }}
+                // style={{ height: '50%' }}
                 onPress={() => Linking.openURL(post.preview.url)}
               />}
         </Card>
-        <ScrollView style={styles.chatContainer}>
-          {generateComments()}
-        </ScrollView>
-        {commentInput()}
+        <ScrollView style={styles.chatContainer} showsVerticalScrollIndicator={false}>
+          {post.comments.map((item) => (
+           <CommentListItem item={item}/>
+          ))
+          }
+            
+          </ScrollView>
+
+          {CommentInput()}
       
         </View>
-        </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
        
- 
+        </KeyboardAvoidingView>
+        
     )
   } else {
     return (
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss();
-        }}>
-        <View style={styles.container}>
-          
+      
+        <View
+        onPress={() => {
+          Keyboard.dismiss();
+          }}
+        style={styles.container}
+        >  
           <Card
             containerStyle={styles.post}
           >
             <Card.Title>{post.text}</Card.Title>
-        </Card>
-        <ScrollView style={styles.chatContainer}>
-            {generateComments()}
-           
-        </ScrollView>
-       {commentInput()}
+          </Card>
+ 
+          <ScrollView style={styles.chatContainer} showsVerticalScrollIndicator={false}>
+          {post.comments.map((item) => (
+            <CommentListItem item={item}/>
+            ))}
+            
+          </ScrollView>
+   
+       {CommentInput()}
        
       </View>
-      </TouchableWithoutFeedback>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#9D9D9D'
   },
   chatContainer: {
-    flex: 2,
+    flex:1,
+    flexGrow: 1,
     padding: 20,
     width: 350,
     marginTop: 5,
     marginBottom: 10,
     borderRadius: 5,
-   
-    backgroundColor: "#F8F0DF"
+    backgroundColor: "#F8F0DF",
+    overflow: 'hidden',
   },
   commentContainer: {
     margin: 5,

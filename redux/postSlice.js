@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
 import socket from '../socket-connect'
-import store from './store'
+// import store from './store'
 
-socket.on('newComment', comment => {
-  store.dispatch(addComment(comment))
-})
+// socket.on('newComment', comment => {
+//   store.dispatch(addComment(comment))
+// })
 
 
 export const getPostAsync = createAsyncThunk(
@@ -40,7 +40,7 @@ const postSlice = createSlice({
   initialState: {
     comments: [],
     text: "",
-    author: "",
+    author: {},
     
   },
   reducers: {},

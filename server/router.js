@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
 const passport = require('passport');
-
-
+require('dotenv').config();
 //import models
 const Comment = require('./models/comment')
 const User = require('./models/user')
@@ -15,66 +14,72 @@ const Posts = require('./controllers/posts')
 const Comments = require('./controllers/comments')
 const Authentication = require('./controllers/authentication')
 
+
+
+
 //auth
 const requireAuth = passport.authenticate('jwt', { session: false });
 const requireSignin = passport.authenticate('local', { session: false });
 
-//fetches a post
-app.param('post', (req, res, next, id) => {
-  Post.findById(id)
-    .exec((err, post) => {
-      if (!post) {
-        res.status(404).send('Post not found');
-        return res.end();
-      } else if (err) {
-        next(err);
-      }
-
-      req.post = post;
-      next();
-    })
-})
-
-//fetches a comment
-app.param('comment', (req, res, next, id) => {
-  Comment.findById(id)
-    .exec((err, comment) => {
-      if (!comment) {
-        res.status(404).send('Comment not found');
-        return res.end();
-      } else if (err) {
-        next(err);
-      }
-
-      req.comment = comment;
-      next();
-    })
-})
-// fetches user
-// app.param('user', (req, res, next, id) => {
-//   User.findById(id)
-//     .exec((err, user) => {
-//       if (!user) {
-//         res.status(404).send('User not found');
-//         return res.end();
-//       } else if (err) {
-//         next(err);
-//       }
-//       req.user = user;
-      
-//       next();
-//     })
-//   })
-
 //routes
 module.exports = (app) => {
-  app.get('/api/groups', Groups.getGroups)
+//fetches a group
+
+  app.param('group', (req, res, next, id) => {
+   
+    Group.findById(id)
+      .exec((err, group) => {
+        if (!group) {
+          res.status(404).send('Group not found');
+          return res.end();
+        } else if (err) {
+          next(err)
+        }
+        
+        req.group = group;
+        next();
+      })
+  })
+  
+  //fetches a post
+  app.param('post', (req, res, next, id) => {
+    Post.findById(id)
+      .exec((err, post) => {
+        if (!post) {
+          res.status(404).send('Post not found');
+          return res.end();
+        } else if (err) {
+          next(err);
+        }
+  
+        req.post = post;
+        next();
+      })
+  })
+  
+  //fetches a comment
+  app.param('comment', (req, res, next, id) => {
+    Comment.findById(id)
+      .exec((err, comment) => {
+        if (!comment) {
+          res.status(404).send('Comment not found');
+          return res.end();
+        } else if (err) {
+          next(err);
+        }
+  
+        req.comment = comment;
+        next();
+      })
+  })
+
   app.get("/api/groups/:group", Groups.getGroup)
   app.post('/api/groups', Groups.addGroup)
   app.put('/api/groups/:group', Groups.editGroup)
   app.delete('/api/groups/:group', Groups.deleteGroup)
+  app.post('/api/groups/:group/add', Groups.addUserToGroup)
 
-  app.get('/api/groups/:group/posts', Posts.getPosts)
+  app.get('/api/groups/:group/posts', Posts.getPosts)//delete?
   app.post('/api/groups/:group/posts', Posts.addPost)
 
   app.get('/api/posts/:post', Posts.getPost)
@@ -87,7 +92,6 @@ module.exports = (app) => {
   app.put('/api/comments/:comment', Comments.editComment)
   app.delete('/api/comments/:comment', Comments.deleteComment)
 
-
   app.post('/auth/login', Authentication.login);
   app.post('/auth/logout', Authentication.logout),
   app.post('/auth/signup', Authentication.signup),
@@ -96,4 +100,31 @@ module.exports = (app) => {
   app.post('/api/users/:user', Authentication.addToVoteRecord)
   app.put('/api/users/:user', Authentication.updateVotes)
   
+
+  const moment = require('moment')
+  const today = moment().startOf('day')
+
+ //find group updated today
+  Group.find({
+    updatedAt: {
+      $gte: today.toDate(),
+      $lte: moment(today).endOf('day').toDate()
+    }
+  }) 
+    .populate('posts')
+    .populate("users", "phone")
+    .exec((err, groups) => {
+
+      groups.forEach(group => {
+        const posts = group.posts.filter(post => post.createdAt >= today.toDate())
+        posts.sort((a, b) => (a.upVotes > b.upvotes) ? 1 : -1)
+        const topPost = posts[0]
+
+        const groupText = group.users.map(user => user.phone)
+        
+
+        //send out topPost to groupText
+      })
+      
+    })
 }

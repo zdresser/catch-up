@@ -59,7 +59,8 @@ exports.signup = (req, res) => {
     // If a user with email does NOT exist, create and save user record
     const user = new User({
       email: email,
-      userName: req.body.userName
+      userName: req.body.userName,
+      phone: req.body.phone
     });
    
     user.setPassword(password);
@@ -68,7 +69,8 @@ exports.signup = (req, res) => {
       if (err) { return next(err); } 
 
       // Repond to request indicating the user was created
-      res.json({ token: tokenForUser(user) });
+      // res.json({ token: tokenForUser(user) });
+      res.status(200).send(user)
     });
   });
 }

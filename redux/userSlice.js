@@ -18,6 +18,23 @@ export const loginAsync = createAsyncThunk(
   }
 )
 
+export const signupAsync = createAsyncThunk(
+  'user/signupAsync',
+  async (user) => {
+    const response = await axios.post('http://192.168.4.62:5000/auth/signup', user);
+
+    const data = {
+      authenticated: true,
+      userName: response.data.userName, 
+      groups: response.data.groups,
+      voteRecord: response.data.voteRecord,
+      _id: response.data._id
+    }
+
+    return {data}
+  }
+)
+
 export const addGroupAsync = createAsyncThunk(
   'user/addGroupAsync',
   async (newGroupObj) => {
@@ -57,6 +74,9 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [loginAsync.fulfilled]: (state, action) => {
+      return action.payload.data
+    },
+    [signupAsync.fulfilled]: (state, action) => {
       return action.payload.data
     },
     [addGroupAsync.fulfilled]: (state, action) => {

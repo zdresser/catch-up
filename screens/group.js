@@ -5,10 +5,11 @@ import { getGroupAsync, editPostVotes, sortPostsByUpvotes } from '../redux/group
 import {addUserVoteAsync, editUserVoteAsync} from '../redux/userSlice'
 import { useDispatch, useSelector } from "react-redux";
 
+
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
   const user = useSelector(state => state.user)
-
+ 
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -19,6 +20,9 @@ export default function Group({ route, navigation }) {
     dispatch(sortPostsByUpvotes(group.posts))
   }, [group.posts])
 
+  const addUserPress = () => {
+    navigation.navigate('AddUserToGroup', {group: group._id})
+  }
   const handlePostPress = (id) => {
     navigation.navigate('Post', {post: id})
   }
@@ -94,17 +98,15 @@ export default function Group({ route, navigation }) {
     }))
   }
 
-  //style entries
-  //posts need to include author, , upvote buttons, num comments
-  //add infinite scroll
+  const toggleAddUser = () => {
+    setVisible(!visible)
+  }
   return (
     <View style={styles.container}>
+     
       <ScrollView>
         {group.posts.map((post) => {
-          // const date = new Date(post.createdAt)
-          // const day = date.toLocaleDateString();
-          // const time = post.createdAt.substring(11, 16)
-        
+                  
           if (post.link) {
             
           return (
@@ -129,6 +131,7 @@ export default function Group({ route, navigation }) {
                   style={styles.title}
                 >{post.text}</ListItem.Title>
                 <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.author.userName}{"\n"}</ListItem.Subtitle>
+                <ListItem.Subtitle>Comments: {post.comments.length}</ListItem.Subtitle>
                   
                 <ListItem.Subtitle>
                   {post.preview.title}
@@ -176,7 +179,7 @@ export default function Group({ route, navigation }) {
                   style={styles.title}
                 >{post.text}</ListItem.Title>
                 <ListItem.Subtitle >Votes: {post.upvotes}  Posted by {post.author.userName} {"\n"}</ListItem.Subtitle>
-              
+                <ListItem.Subtitle>Comments: {post.comments.length}</ListItem.Subtitle>
             </ListItem.Content>
             <Icon
               name='arrow-down'
@@ -189,14 +192,24 @@ export default function Group({ route, navigation }) {
         }
       })}
       </ScrollView>
-    
+      
       <View style={styles.buttonContainer}>
+        <View style={styles.bottomButton}>
         <Button
           title="New Post"
           titleStyle={{color: '#79B4B7'}}
           buttonStyle={styles.button}
           onPress={() => newPostPress()}
-        />
+          />
+        </View>
+        <View >
+        <Button
+          title="Add user to group"
+          titleStyle={{color: '#79B4B7'}}
+          buttonStyle={styles.button}
+          onPress={() => addUserPress()}
+          />
+          </View>
     </View>
     </View>
     
@@ -213,10 +226,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#FEFBF3',
-    
   },
   buttonContainer: {
-    margin: 5
+    margin: 5,
+    flex: 0,
+    flexDirection: 'row',
+  },
+  bottomButton: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginRight: 20
   },
   postContainer: {
     backgroundColor: '#79B4B7',
