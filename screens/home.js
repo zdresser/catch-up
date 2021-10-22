@@ -18,8 +18,6 @@ export default function Home({navigation}) {
     navigation.navigate('NewGroup', {user: user._id})
   }
 
-
-
   return (
     
     <View style={styles.container}>
@@ -33,7 +31,6 @@ export default function Home({navigation}) {
                 bottomDivider
                 onPress={() => handleGroupPress(item._id)}
                 containerStyle={styles.listItem}
-                
               >
                 <ListItem.Title
                   style={{color: '#FEFBF3'}}
@@ -52,7 +49,6 @@ export default function Home({navigation}) {
           onPress={() => newGroupPress()}
         />
       </View>
-     
   )
 }
 

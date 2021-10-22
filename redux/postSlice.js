@@ -40,7 +40,7 @@ const postSlice = createSlice({
   initialState: {
     comments: [],
     text: "",
-    author: "",
+    author: {},
     
   },
   reducers: {},

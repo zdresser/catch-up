@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const passport = require('passport');
-
+require('dotenv').config();
 //import models
 const Comment = require('./models/comment')
 const User = require('./models/user')
@@ -13,6 +13,9 @@ const Groups = require('./controllers/groups');
 const Posts = require('./controllers/posts')
 const Comments = require('./controllers/comments')
 const Authentication = require('./controllers/authentication')
+
+
+
 
 //auth
 const requireAuth = passport.authenticate('jwt', { session: false });

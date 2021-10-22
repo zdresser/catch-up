@@ -12,12 +12,14 @@
     "@react-navigation/native-stack": "^6.2.4",
     "@reduxjs/toolkit": "^1.6.2",
     "axios": "^0.23.0",
+    "dotenv": "^10.0.0",
     "expo": "~43.0.0-beta.3",
     "expo-cli": "^4.12.1",
     "expo-secure-store": "~11.0.1",
     "expo-status-bar": "~1.1.0",
     "formik": "^2.2.9",
     "moment": "^2.29.1",
+    "node-schedule": "^2.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.2",
@@ -32,6 +34,7 @@
     "redux-thunk": "^2.3.0",
     "socket.io": "^4.3.1",
     "socket.io-client": "^4.3.2",
+    "twilio": "^3.70.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

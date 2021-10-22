@@ -78,7 +78,7 @@ export default function Signup() {
                 <Text style={{ fontSize: 10, color: 'red' }}>{errors.userName}</Text>
               }
               <Input
-                placeholder="5555555555"
+                placeholder="+15555555555"
                 leftIcon={{ type: 'font-awesome', name: 'mobile' }}
                 label="Phone number"
                 onChangeText={handleChange('phone')}
