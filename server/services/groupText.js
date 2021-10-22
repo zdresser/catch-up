@@ -1,13 +1,13 @@
-require('dotenv').config();
+require('dotenv').config()
 const Group = require('../models/group')
 const moment = require('moment')
 const today = moment().startOf('day')
-const accountSid = 'ACc476d0e0eb5208e5b5c53ddd7a59c0dd'
-const authToken = '23b97ffbf93cc9a20a795f7297575776'
+const accountSid = process.env.TWILIO_ACCOUNT_SID
+const authToken = process.env.TWILIO_AUTH_TOKEN
 const client = require('twilio')(accountSid, authToken)
 
 exports.groupText = () => {
-  
+  //find all groups with activity in the current day
   Group.find({
     updatedAt: {
       $gte: today.toDate(),
@@ -22,9 +22,8 @@ exports.groupText = () => {
         const posts = group.posts.filter(post => post.createdAt >= today.toDate())
         posts.sort((a, b) => (a.upVotes > b.upvotes) ? 1 : -1)
         const topPost = posts[0]
-
       
-        //will need to loop through users and send a text to each
+        //loop through users and send a text to each
         group.users.forEach(user => {
           client.messages
           .create({

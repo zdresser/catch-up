@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
@@ -5,7 +6,7 @@ const passport = require("passport");
 const router = require('./router')
 const keys = require('./config/keys')
 const socketio = require('socket.io')
-require('dotenv').config();
+
 const Text = require('./services/groupText')
 const schedule = require('node-schedule')
 
