@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, View, Text,   ScrollView, Linking } from 'react-native'
-import {ListItem, Button, Icon, Image} from 'react-native-elements'
-import { getGroupAsync, editPostVotes, sortPostsByUpvotes } from '../redux/groupSlice'
+import {ListItem, Button, Icon, Image, Switch} from 'react-native-elements'
+import { getGroupAsync, editPostVotes, sortPostsByUpvotes, sortPostsByDate } from '../redux/groupSlice'
 import {addUserVoteAsync, editUserVoteAsync} from '../redux/userSlice'
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
   const user = useSelector(state => state.user)
- 
+  const [sortByDate, setSortByDate] = useState(false)
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -17,8 +17,14 @@ export default function Group({ route, navigation }) {
   }, [])
 
   useEffect(() => {
-    dispatch(sortPostsByUpvotes(group.posts))
-  }, [group.posts])
+    if (sortByDate === false) {
+      dispatch(sortPostsByUpvotes(group.posts))
+    }
+
+    if (sortByDate === true) {
+      dispatch(sortPostsByDate(group.posts))
+    }
+  }, [group.posts, sortByDate, setSortByDate])
 
   const addUserPress = () => {
     navigation.navigate('AddUserToGroup', {group: group._id})
@@ -101,67 +107,60 @@ export default function Group({ route, navigation }) {
   const toggleAddUser = () => {
     setVisible(!visible)
   }
-  return (
-    <View style={styles.container}>
-     
-      <ScrollView>
-        {group.posts.map((post) => {
-                  
-          if (post.link) {
-            
-          return (
-            
-            <ListItem
-            bottomDivider
-            containerStyle={styles.postContainer}
-              onPress={() => handlePostPress(post._id)}
-            key={post._id}
-            >
-              
-           <Icon
-              name='arrow-up'
-              type='font-awesome-5'
-              color="#F8F0DF"
-              onPress={() => handleUpvotePress(post._id)}
-              />
-              
-              <ListItem.Content>
-                
-                <ListItem.Title
-                  style={styles.title}
-                >{post.text}</ListItem.Title>
-                <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.author.userName}{"\n"}</ListItem.Subtitle>
-                <ListItem.Subtitle>Comments: {post.comments.length}</ListItem.Subtitle>
-                  
-                <ListItem.Subtitle>
-                  {post.preview.title}
-                </ListItem.Subtitle>
-                <ListItem.Subtitle>
-                  {post.preview.description.substring(0, 100)}
-                </ListItem.Subtitle>
-{/* Edit image so that the generic twitter one doesnt show? */}
-                { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Image
-                  source={{ uri: post.preview.image }}
-                  style={{
-                    height: 250,
-                    width: 250
-                  }}
-                />}
 
-              </ListItem.Content>
-              
-            <Icon
-              name='arrow-down'
-              type='font-awesome-5'
-              color="#F8F0DF"
-              onPress={() => handleDownvotePress(post._id)}
-            />
-            </ListItem>
-           
+  const PostWithLink = ({post}) => {
+    return (
+      <ListItem
+      bottomDivider
+      containerStyle={styles.postContainer}
+        onPress={() => handlePostPress(post._id)}
+      key={post._id}
+      >
+        
+     <Icon
+        name='arrow-up'
+        type='font-awesome-5'
+        color="#F8F0DF"
+        onPress={() => handleUpvotePress(post._id)}
+        />
+        
+        <ListItem.Content>
+          
+          <ListItem.Title
+            style={styles.title}
+          >{post.text}</ListItem.Title>
+          <ListItem.Subtitle >Votes: {post.upvotes} Posted by {post.author.userName}{"\n"}</ListItem.Subtitle>
+          <ListItem.Subtitle>Comments: {post.comments.length}</ListItem.Subtitle>
             
-        )
-        } else {
-          return (
+          <ListItem.Subtitle>
+            {post.preview.title}
+          </ListItem.Subtitle>
+          <ListItem.Subtitle>
+            {post.preview.description.substring(0, 100)}
+          </ListItem.Subtitle>
+
+          { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Image
+            source={{ uri: post.preview.image }}
+            style={{
+              height: 250,
+              width: 250
+            }}
+          />}
+
+        </ListItem.Content>
+        
+      <Icon
+        name='arrow-down'
+        type='font-awesome-5'
+        color="#F8F0DF"
+        onPress={() => handleDownvotePress(post._id)}
+      />
+      </ListItem>
+    )
+  }
+
+  const PostWithoutLink = ({post}) => {
+    return (
             <ListItem
               bottomDivider
               containerStyle={styles.postContainer}
@@ -188,12 +187,40 @@ export default function Group({ route, navigation }) {
               onPress={() => handleDownvotePress(post._id)}
             />
           </ListItem>
+    )
+  }
+
+
+
+  return (
+    <View style={styles.container}>
+     
+      <ScrollView>
+        {group.posts.map((post) => {
+                  
+          if (post.link) {
+            
+          return (
+            <PostWithLink post={post} />
+          )
+        } else {
+          return (
+            <PostWithoutLink post={post} />
           )
         }
-      })}
+        })}
       </ScrollView>
       
       <View style={styles.buttonContainer}>
+        <View style={styles.slider}>
+          {sortByDate === false && <Text>Sort By Votes</Text>}
+          {sortByDate===true && <Text>Sort By New</Text>}
+        <Switch
+          value={sortByDate}
+          onValueChange={() => setSortByDate(!sortByDate)}
+          style={{marginRight: 15}}
+          />
+        </View>
         <View style={styles.bottomButton}>
         <Button
           title="New Post"
@@ -204,13 +231,13 @@ export default function Group({ route, navigation }) {
         </View>
         <View >
         <Button
-          title="Add user to group"
+          title="Invite to group"
           titleStyle={{color: '#79B4B7'}}
           buttonStyle={styles.button}
           onPress={() => addUserPress()}
           />
           </View>
-    </View>
+      </View>
     </View>
     
   )
@@ -242,6 +269,12 @@ const styles = StyleSheet.create({
     width: 350,
     margin: 10,
     borderRadius: 35,
+  },
+  slider: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginLeft: 5
   },
   title: {
     color: '#FEFBF3',

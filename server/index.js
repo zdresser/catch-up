@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
   console.log('Socket connected')
 })
 
-//send group text daily at 11:00 p.m.
-schedule.scheduleJob('0 0 23 ? * * *', () => {
+//send group text daily at 11:00 p.m. eastern/3 utc
+schedule.scheduleJob('0 0 3/24 ? * 1/1 *', () => {
   Text.groupText()
 })

@@ -38,6 +38,9 @@ const groupSlice = createSlice({
   reducers: {
     sortPostsByUpvotes(state, action) {
      state.posts.sort((a, b) => (a.upvotes > b.upvotes) ? -1 : 1)
+    },
+    sortPostsByDate(state, action) {
+      state.posts.sort((a,b) => (a.createdAt > b.createdAt) ? -1: 1)
     }
   },
   extraReducers: {
@@ -56,5 +59,5 @@ const groupSlice = createSlice({
     }
   }
 })
-export const { sortPostsByUpvotes } = groupSlice.actions;
+export const { sortPostsByUpvotes, sortPostsByDate } = groupSlice.actions;
 export default groupSlice.reducer;
