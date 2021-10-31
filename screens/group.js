@@ -114,7 +114,7 @@ export default function Group({ route, navigation }) {
       bottomDivider
       containerStyle={styles.postContainer}
         onPress={() => handlePostPress(post._id)}
-      key={post._id}
+      // key={post._id}
       >
         
      <Icon
@@ -201,11 +201,11 @@ export default function Group({ route, navigation }) {
           if (post.link) {
             
           return (
-            <PostWithLink post={post} />
+            <PostWithLink post={post} key={post._id}/>
           )
         } else {
           return (
-            <PostWithoutLink post={post} />
+            <PostWithoutLink post={post} key={post._id}/>
           )
         }
         })}
