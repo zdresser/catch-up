@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
-import { ExportConfigurationInstance } from "twilio/lib/rest/bulkexports/v1/exportConfiguration";
+import * as SecureStore from 'expo-secure-store';
 import socket from '../socket-connect'
 // import store from './store'
 

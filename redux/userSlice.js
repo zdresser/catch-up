@@ -75,7 +75,11 @@ const userSlice = createSlice({
     voteRecord: [],
     token: null
   },
-  reducers: {},
+  reducers: {
+    logout(state, action) {
+      return state => initialState
+    }
+  },
   extraReducers: {
     [loginAsync.fulfilled]: (state, action) => {
       SecureStore.setItemAsync("token", action.payload.data.token)
@@ -97,4 +101,5 @@ const userSlice = createSlice({
   }
 })
 
+export const {logout} = userSlice.actions
 export default userSlice.reducer

@@ -13,6 +13,7 @@ exports.getPosts = (req, res) => {
 }
 
 exports.getPost = (req, res) => {
+  
   Post.findById(req.params.post)
     .populate({
       path: 'comments',

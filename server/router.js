@@ -18,7 +18,6 @@ const Authentication = require('./controllers/authentication')
 
 //auth
 const requireAuth = passport.authenticate('jwt', { session: false });
-
 const requireSignin = passport.authenticate('local', { session: false });
 
 //routes

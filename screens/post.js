@@ -16,7 +16,6 @@ export default function Post({ navigation, route }) {
   const [newCommentText, setNewCommentText] = useState('');
   const user = useSelector(state => state.user)
   const post = useSelector(state => state.post);
-  
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -39,11 +38,14 @@ export default function Post({ navigation, route }) {
   }
 
   const CommentInput = () => {
-//when used as a component this causes funky problems with the keyboard. why??
+
     return (
-      <View style={styles.newCommentContainer}>
+      <View
+        style={styles.newCommentContainer}
+        // keyboardShouldPersistTaps='handled' -- doesn't work
+      >
           <Input
-          value={newCommentText}
+          defaultValue={newCommentText}
           placeholder='Add a comment'
           onChangeText={text => setNewCommentText(text)}
           rightIcon={
@@ -63,7 +65,7 @@ export default function Post({ navigation, route }) {
       <ListItem
       bottomDivider
       containerStyle={styles.commentContainer}
-      key={item._id}
+      // key={item._id}
     >
       <ListItem.Subtitle >{item.author.userName}</ListItem.Subtitle>
       <ListItem.Title>{item.text}</ListItem.Title>
@@ -92,7 +94,6 @@ export default function Post({ navigation, route }) {
           
               { post.preview.image !== "https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" && <Card.Image
                 source={{ uri: post.preview.image }}
-                // style={{ height: '50%' }}
                 onPress={() => Linking.openURL(post.preview.url)}
               />}
             </Card>
@@ -106,7 +107,7 @@ export default function Post({ navigation, route }) {
         onPress={() => {
           Keyboard.dismiss();
           }}
-        style={styles.container}
+          style={styles.container}
         >  
           <Card
             containerStyle={styles.post}
@@ -121,15 +122,19 @@ export default function Post({ navigation, route }) {
 
   return (
     <Wrapper>
-      <ScrollView style={styles.chatContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.chatContainer}
+        showsVerticalScrollIndicator={false}
+     
+      >
           {post.comments.map((item) => (
-           <CommentListItem item={item} key={item._id}/>
+            <CommentListItem item={item} key={item._id}/>
           ))
           }
             
       </ScrollView>
 
-          {CommentInput()}
+       {CommentInput()}
     </Wrapper>
   )
 }
