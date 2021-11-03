@@ -39,20 +39,19 @@ export default function Navigation() {
               options={{
                 title: group.title
               }}
-            />
+          />
           <Stack.Screen name="Post" component={Post} />
-            <Stack.Screen name="NewPost" component={NewPost} />
-            <Stack.Screen name="NewGroup" component={NewGroup} />
-            <Stack.Screen name="AddUserToGroup" component={AddUserToGroup} />
+          <Stack.Screen name="NewPost" component={NewPost} />
+          <Stack.Screen name="NewGroup" component={NewGroup} />
+          <Stack.Screen name="AddUserToGroup" component={AddUserToGroup} />
         </>
         ) : (
-        <>
+          <>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} /> 
           </>
         )}
-        
-        
+
       </Stack.Navigator>
    </NavigationContainer>
   )

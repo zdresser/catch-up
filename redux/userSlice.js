@@ -12,8 +12,10 @@ export const loginAsync = createAsyncThunk(
       userName: response.data.userName, 
       groups: response.data.groups,
       voteRecord: response.data.voteRecord,
-      _id: response.data._id
+      _id: response.data._id,
+      token: response.data.token
     }
+    
     return {data}
   }
 )
@@ -28,7 +30,8 @@ export const signupAsync = createAsyncThunk(
       userName: response.data.userName, 
       groups: response.data.groups,
       voteRecord: response.data.voteRecord,
-      _id: response.data._id
+      _id: response.data._id,
+      token: response.data.token
     }
 
     return {data}
@@ -69,11 +72,13 @@ const userSlice = createSlice({
     authenticated: false,
     username: null,
     groups: [],
-    voteRecord: []
+    voteRecord: [],
+    token: null
   },
   reducers: {},
   extraReducers: {
     [loginAsync.fulfilled]: (state, action) => {
+      SecureStore.setItemAsync("token", action.payload.data.token)
       return action.payload.data
     },
     [signupAsync.fulfilled]: (state, action) => {

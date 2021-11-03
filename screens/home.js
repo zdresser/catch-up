@@ -18,6 +18,7 @@ export default function Home({navigation}) {
     navigation.navigate('NewGroup', {user: user._id})
   }
 
+  console.log(user.token)
   return (
     
     <View style={styles.container}>

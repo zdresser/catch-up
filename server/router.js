@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const passport = require('passport');
+const passportService = require('./services/passport');
 require('dotenv').config();
 //import models
 const Comment = require('./models/comment')
@@ -15,10 +16,9 @@ const Comments = require('./controllers/comments')
 const Authentication = require('./controllers/authentication')
 
 
-
-
 //auth
 const requireAuth = passport.authenticate('jwt', { session: false });
+
 const requireSignin = passport.authenticate('local', { session: false });
 
 //routes
@@ -92,7 +92,7 @@ module.exports = (app) => {
   app.put('/api/comments/:comment', Comments.editComment)
   app.delete('/api/comments/:comment', Comments.deleteComment)
 
-  app.post('/auth/login', Authentication.login);
+  app.post('/auth/login', requireSignin, Authentication.login);
   app.post('/auth/logout', Authentication.logout),
   app.post('/auth/signup', Authentication.signup),
   app.get('/auth/current_user', Authentication.currentUser)
@@ -101,30 +101,30 @@ module.exports = (app) => {
   app.put('/api/users/:user', Authentication.updateVotes)
   
 
-  const moment = require('moment')
-  const today = moment().startOf('day')
+//   const moment = require('moment')
+//   const today = moment().startOf('day')
 
- //find group updated today
-  Group.find({
-    updatedAt: {
-      $gte: today.toDate(),
-      $lte: moment(today).endOf('day').toDate()
-    }
-  }) 
-    .populate('posts')
-    .populate("users", "phone")
-    .exec((err, groups) => {
+//  //find group updated today
+//   Group.find({
+//     updatedAt: {
+//       $gte: today.toDate(),
+//       $lte: moment(today).endOf('day').toDate()
+//     }
+//   }) 
+//     .populate('posts')
+//     .populate("users", "phone")
+//     .exec((err, groups) => {
 
-      groups.forEach(group => {
-        const posts = group.posts.filter(post => post.createdAt >= today.toDate())
-        posts.sort((a, b) => (a.upVotes > b.upvotes) ? 1 : -1)
-        const topPost = posts[0]
+//       groups.forEach(group => {
+//         const posts = group.posts.filter(post => post.createdAt >= today.toDate())
+//         posts.sort((a, b) => (a.upVotes > b.upvotes) ? 1 : -1)
+//         const topPost = posts[0]
 
-        const groupText = group.users.map(user => user.phone)
+//         const groupText = group.users.map(user => user.phone)
         
 
-        //send out topPost to groupText
-      })
+//         //send out topPost to groupText
+//       })
       
-    })
+//     })
 }

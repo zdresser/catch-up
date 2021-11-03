@@ -6,17 +6,23 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const JwtStrategy = require('passport-jwt').Strategy;
 const LocalStrategy = require('passport-local');
 
-const localOptions = { usernameField: 'email' };
+const localOptions = {
+  usernameField: 'email',
+  passwordField: 'password'
+};
 
 const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
-  User.findOne({ email:email }, (err, user) => {
+  
+  User.findOne({ email: email }, "username salt hash",  (err, user) => {
+    
     if (err) { return done(err) }
     if (!user) { return done(null, false, { message: 'No user with that name' }) }
     
-    if (password !== user.password) {
+    // if (password !== user.password) {
+    if (!user.validPassword(password)) {
       return done(null, false, { message: 'Incorrect password.'})
     }
-
+    console.log(user)
     return done(null, user);
   });
 });
