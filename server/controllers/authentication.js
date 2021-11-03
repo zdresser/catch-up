@@ -6,12 +6,13 @@ const tokenForUser = (user) => {
   return jwt.encode({ 
     sub: user._id,
     iat: Math.round(Date.now() / 1000),
+    //no expiry b/c issuing to mobile app
     }, 
     keys.TOKEN_SECRET)
 };
 
 exports.login = (req, res) => {
-  
+ 
   User.findOne({ email: req.body.email })
     .populate('groups')
     .exec((err, user) => {
@@ -20,7 +21,15 @@ exports.login = (req, res) => {
       } else if (err) {
         next(err)
       }
-      res.status(200).send(user)
+      const token = tokenForUser(user)
+     
+      res.status(200).send({
+        userName: user.userName,
+        groups: user.groups,
+        voteRecord: user.voteRecord,
+        _id: user._id,
+        token: token 
+      })
     })
 };
 

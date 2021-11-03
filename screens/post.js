@@ -13,8 +13,6 @@ import socket from '../socket-connect' //actually being used despite grey
 // );
 
 export default function Post({ navigation, route }) {
-  //use deep linking to launch link in appropriate app 
-  
   const [newCommentText, setNewCommentText] = useState('');
   const user = useSelector(state => state.user)
   const post = useSelector(state => state.post);
@@ -74,10 +72,9 @@ export default function Post({ navigation, route }) {
     ) 
   }
 
-  if (post.link) {
-    
-    return (
-      
+  const Wrapper = ({ children }) => {
+    if (post.link) {
+      return (
       <KeyboardAvoidingView
         onPress={() => {
         Keyboard.dismiss();
@@ -87,9 +84,9 @@ export default function Post({ navigation, route }) {
         
         <View style={styles.inner} >
        
-        <Card
+          <Card
           containerStyle={styles.post}
-        >
+          >
           <Card.Title>{post.preview.description.substring(0,200)}</Card.Title>
           <Text>{post.preview.title}</Text>
           
@@ -98,25 +95,13 @@ export default function Post({ navigation, route }) {
                 // style={{ height: '50%' }}
                 onPress={() => Linking.openURL(post.preview.url)}
               />}
-        </Card>
-        <ScrollView style={styles.chatContainer} showsVerticalScrollIndicator={false}>
-          {post.comments.map((item) => (
-           <CommentListItem item={item}/>
-          ))
-          }
-            
-          </ScrollView>
-
-          {CommentInput()}
-      
-        </View>
-       
-        </KeyboardAvoidingView>
-        
-    )
-  } else {
-    return (
-      
+            </Card>
+            { children }
+          </View>
+       </KeyboardAvoidingView>     
+      )
+    } else {
+      return (
         <View
         onPress={() => {
           Keyboard.dismiss();
@@ -128,19 +113,25 @@ export default function Post({ navigation, route }) {
           >
             <Card.Title>{post.text}</Card.Title>
           </Card>
- 
-          <ScrollView style={styles.chatContainer} showsVerticalScrollIndicator={false}>
-          {post.comments.map((item) => (
-            <CommentListItem item={item}/>
-            ))}
-            
-          </ScrollView>
-   
-       {CommentInput()}
-       
-      </View>
-    )
+          {children}
+        </View>
+      )
+    }
   }
+
+  return (
+    <Wrapper>
+      <ScrollView style={styles.chatContainer} showsVerticalScrollIndicator={false}>
+          {post.comments.map((item) => (
+           <CommentListItem item={item} key={item._id}/>
+          ))
+          }
+            
+      </ScrollView>
+
+          {CommentInput()}
+    </Wrapper>
+  )
 }
 
 const styles = StyleSheet.create({
