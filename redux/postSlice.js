@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
+import { ExportConfigurationInstance } from "twilio/lib/rest/bulkexports/v1/exportConfiguration";
 import socket from '../socket-connect'
 // import store from './store'
 
@@ -11,7 +12,15 @@ import socket from '../socket-connect'
 export const getPostAsync = createAsyncThunk(
   'post/loadPostAsync',
   async (post) => {
-    const response = await axios.get(`http://192.168.4.62:5000/api/posts/${post}`)
+    let token = await SecureStore.getItemAsync('token');
+    
+    const config = {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }
+
+    const response = await axios.get(`http://192.168.4.62:5000/api/posts/${post}`, config)
     const data = response.data
     return { data }
   }
@@ -20,7 +29,15 @@ export const getPostAsync = createAsyncThunk(
 export const editPost = createAsyncThunk(
   'post/editPost',
   async (editPostObj) => {
-    const response = await axios.put(`http://192.168.4.62:5000/api/posts/${editPostObj.post}`, editPostObj)
+    let token = await SecureStore.getItemAsync('token');
+    
+    const config = {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }
+
+    const response = await axios.put(`http://192.168.4.62:5000/api/posts/${editPostObj.post}`, editPostObj, config)
     const data = response.data;
     return { data }
   }
@@ -29,7 +46,15 @@ export const editPost = createAsyncThunk(
 export const addComment = createAsyncThunk(
   'post/addComment',
   async (addCommentObj) => {
-    const response = await axios.post(`http://192.168.4.62:5000/api/posts/${addCommentObj.post}/comments`, addCommentObj)
+    let token = await SecureStore.getItemAsync('token');
+    
+    const config = {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }
+
+    const response = await axios.post(`http://192.168.4.62:5000/api/posts/${addCommentObj.post}/comments`, addCommentObj, config)
     const data = response.data;
     return {data}
   }

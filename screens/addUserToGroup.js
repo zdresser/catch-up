@@ -7,7 +7,15 @@ export default function AddUserToGroup({ route, navigation }) {
   const [userEmail, setUserEmail] = useState('')
   
   const sendRequest = async () => {
-    axios.post(`http://192.168.4.62:5000/api/groups/${route.params.group}/add`, {email: userEmail})
+    let token = await SecureStore.getItemAsync('token');
+    
+    const config = {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }
+    
+    axios.post(`http://192.168.4.62:5000/api/groups/${route.params.group}/add`, {email: userEmail}, config)
       .then((response) => {
 
         if (response.status === 200) {

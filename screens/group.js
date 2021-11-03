@@ -4,7 +4,6 @@ import {ListItem, Button, Icon, Image, Switch} from 'react-native-elements'
 import { getGroupAsync, editPostVotes, sortPostsByUpvotes, sortPostsByDate } from '../redux/groupSlice'
 import {addUserVoteAsync, editUserVoteAsync} from '../redux/userSlice'
 import { useDispatch, useSelector } from "react-redux";
-import * as SecureStore from 'expo-secure-store';
 
 export default function Group({ route, navigation }) {
   const group = useSelector(state => state.group)
@@ -15,16 +14,6 @@ export default function Group({ route, navigation }) {
   useEffect(() => {
     dispatch(getGroupAsync(route.params.group))
   }, [])
-
-  useEffect(() => {
-    getToken()
-  }, [user])
-  
-  async function getToken() {
-    let result = await SecureStore.getItemAsync(token)
-
-    console.log(result)
-  }
 
   useEffect(() => {
     if (sortByDate === false) {

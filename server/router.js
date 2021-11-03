@@ -73,27 +73,26 @@ module.exports = (app) => {
       })
   })
 
-  app.get("/api/groups/:group", Groups.getGroup)
-  app.post('/api/groups', Groups.addGroup)
-  app.put('/api/groups/:group', Groups.editGroup)
-  app.delete('/api/groups/:group', Groups.deleteGroup)
-  app.post('/api/groups/:group/add', Groups.addUserToGroup)
+  app.get("/api/groups/:group", requireAuth, Groups.getGroup)
+  app.post('/api/groups', requireAuth, Groups.addGroup)
+  app.put('/api/groups/:group', requireAuth, Groups.editGroup)
+  app.delete('/api/groups/:group', requireAuth, Groups.deleteGroup)
+  app.post('/api/groups/:group/add', requireAuth, Groups.addUserToGroup)
 
-  app.get('/api/groups/:group/posts', Posts.getPosts)//delete?
-  app.post('/api/groups/:group/posts', Posts.addPost)
+  
+  app.post('/api/groups/:group/posts', requireAuth, Posts.addPost)
 
-  app.get('/api/posts/:post', Posts.getPost)
-  app.put('/api/posts/:post', Posts.editPost)
-  app.delete('/api/posts/:post', Posts.deletePost)
+  app.get('/api/posts/:post', requireAuth, Posts.getPost)
+  app.put('/api/posts/:post', requireAuth, Posts.editPost)
+  app.delete('/api/posts/:post', requireAuth, Posts.deletePost)
 
-  app.get('/api/posts/:post/comments', Comments.getComments) //unnecessary
-  app.post('/api/posts/:post/comments', Comments.addComment)
-  app.get('/api/comments/:comment', Comments.getComment) //unnecesary
-  app.put('/api/comments/:comment', Comments.editComment)
-  app.delete('/api/comments/:comment', Comments.deleteComment)
+ 
+  app.post('/api/posts/:post/comments', requireAuth, Comments.addComment)
+  app.put('/api/comments/:comment', requireAuth, Comments.editComment)
+  app.delete('/api/comments/:comment', requireAuth, Comments.deleteComment)
 
   app.post('/auth/login', requireSignin, Authentication.login);
-  app.post('/auth/logout', Authentication.logout),
+  app.post('/auth/logout', Authentication.logout), //Should backend be involved in logout? 
   app.post('/auth/signup', Authentication.signup),
   app.get('/auth/current_user', Authentication.currentUser)
   

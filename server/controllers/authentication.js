@@ -12,7 +12,7 @@ const tokenForUser = (user) => {
 };
 
 exports.login = (req, res) => {
-  console.log(req.user)
+ 
   User.findOne({ email: req.body.email })
     .populate('groups')
     .exec((err, user) => {

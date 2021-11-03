@@ -82,6 +82,7 @@ const userSlice = createSlice({
       return action.payload.data
     },
     [signupAsync.fulfilled]: (state, action) => {
+      SecureStore.setItemAsync("token", action.payload.data.token)
       return action.payload.data
     },
     [addGroupAsync.fulfilled]: (state, action) => {
