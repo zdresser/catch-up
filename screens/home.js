@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, View,  Text, FlatList, ScrollView, Platform } from 'react-native'
 import {  Button, ListItem } from 'react-native-elements';
-import {useSelector} from 'react-redux'
-
+import {useSelector, useDispatch} from 'react-redux'
+import {logout} from '../redux/userSlice'
 
 
 export default function Home({navigation}) {
- 
+  const dispatch = useDispatch()
   const user = useSelector(state => state.user)
 
   const handleGroupPress = (id) => {
@@ -18,6 +18,9 @@ export default function Home({navigation}) {
     navigation.navigate('NewGroup', {user: user._id})
   }
 
+  const logoutPress = () => {
+    dispatch(logout())
+  }
  
   return (
     
@@ -41,19 +44,29 @@ export default function Home({navigation}) {
           })
         }
       </View>
-      
+      <View style={styles.bottomButton}>
       <Button
           title="New Group"
           titleStyle={{ color: '#79B4B7' }}
           containerStyle={{margin: 5}}
           buttonStyle={styles.button}
           onPress={() => newGroupPress()}
+      />
+      
+      <Button
+          title="Logout"
+          titleStyle={{ color: '#79B4B7' }}
+          containerStyle={{margin: 5}}
+          buttonStyle={styles.button}
+          onPress={() => logoutPress()}
         />
+        </View>
       </View>
   )
 }
 
 const styles = StyleSheet.create({
+  
   container: {
     paddingTop: 40,
     flex: 1,
@@ -76,5 +89,10 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#FEFBF3',
     
+  },
+  bottomButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginRight: 20
   },
 })

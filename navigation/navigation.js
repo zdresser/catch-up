@@ -1,8 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from 'react';
-import {useSelector} from 'react-redux'
-
+import {useSelector, useDispatch} from 'react-redux'
+import * as SecureStore from 'expo-secure-store';
+import { loginFromSecureStore } from '../redux/userSlice';
 //component and screen imports
 
 import Home from '../screens/home';
@@ -19,8 +20,20 @@ const Stack = createNativeStackNavigator();
 
 export default function Navigation() {
   const user = useSelector(state => state.user);
-  const group = useSelector(state => state.group)
+  const group = useSelector(state => state.group);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    loadStorageData();
+  }, [])
   
+  async function loadStorageData() {
+    const userData = await SecureStore.getItemAsync("userData")
+    if (userData) {
+      const data = JSON.parse(userData)
+      dispatch(loginFromSecureStore(data))
+    }
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator
