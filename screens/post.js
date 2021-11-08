@@ -38,7 +38,6 @@ export default function Post({ navigation, route }) {
   }
 
   const CommentInput = () => {
-
     return (
       <View
         style={styles.newCommentContainer}

@@ -66,6 +66,8 @@ export const editUserVoteAsync = createAsyncThunk(
     return {data}
   }
 )
+
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -77,12 +79,17 @@ const userSlice = createSlice({
   },
   reducers: {
     logout(state, action) {
+      SecureStore.deleteItemAsync('token')
       return state => initialState
+    },
+    loginFromSecureStore(state, action) {
+      return action.payload.data
     }
   },
   extraReducers: {
     [loginAsync.fulfilled]: (state, action) => {
       SecureStore.setItemAsync("token", action.payload.data.token)
+      SecureStore.setItemAsync("userData", JSON.stringify(action.payload.data))
       return action.payload.data
     },
     [signupAsync.fulfilled]: (state, action) => {
@@ -97,9 +104,12 @@ const userSlice = createSlice({
     },
     [editUserVoteAsync.fulfilled]: (state, action) => {
       state.voteRecord = action.payload.data.voteRecord
-    }
+    },
+    // [loginFromSecureStore.fulfilled]: (state, action) => {
+    //   return action.payload.data
+    // }
   }
 })
 
-export const {logout} = userSlice.actions
+export const {logout, loginFromSecureStore} = userSlice.actions
 export default userSlice.reducer
