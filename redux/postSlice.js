@@ -1,14 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
 import * as SecureStore from 'expo-secure-store'
-import socket from '../socket-connect'
-import store from './store'
-import _ from "lodash"
-
-
-socket.on('newComment', comment => {
-  store.dispatch(addComment(comment))
-})
 
 
 export const getPostAsync = createAsyncThunk(
@@ -70,7 +62,12 @@ const postSlice = createSlice({
     author: {},
     
   },
-  reducers: {},
+  reducers: {
+    addCommentFromSocket(state, action) {
+      
+      state.comments.push(action.payload)
+    }
+  },
   extraReducers: {
     [getPostAsync.fulfilled]: (state, action) => {
       return action.payload.data
@@ -80,14 +77,9 @@ const postSlice = createSlice({
       //todo
     },
     [addComment.fulfilled]: (state, action) => {
-      //check to see if comment is already in state when received from socket
-      const ids = state.map(obj => obj._id);
-      if (_.includes(ids, action.payload.data._id)) {
-        return state
-      }
-      state.comments.push(action.payload.data)
+     
     }
   }
 })
-
+export const {addCommentFromSocket} = postSlice.actions
 export default postSlice.reducer

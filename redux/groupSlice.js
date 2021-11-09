@@ -3,11 +3,7 @@ import axios from 'axios'
 import * as SecureStore from 'expo-secure-store';
 
 
-// const config = {
-//   headers: {
-//     Authorization: 'Bearer ' + localStorage.getItem('token')
-//   }
-// }
+
 
 export const getGroupAsync = createAsyncThunk(
   'post/loadGroupAsync',
