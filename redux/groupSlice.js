@@ -5,7 +5,6 @@ import * as SecureStore from "expo-secure-store";
 export const getGroupAsync = createAsyncThunk(
   "post/loadGroupAsync",
   async (group) => {
-    // const { user } = getState(); -- doesn't work so try getting from secure store next
     let token = await SecureStore.getItemAsync("token");
 
     const config = {
