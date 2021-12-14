@@ -1,7 +1,6 @@
 const Post = require('../models/post')
 const Comment = require('../models/comment')
 
-
 exports.getComments = (req, res) => {
   Post.findById(req.params.post)
     .exec((err, post) => {
@@ -36,8 +35,8 @@ exports.addComment = (req, res) => {
       post.save();
       newComment.populate('author', 'userName', (err) => {
         
-        req.app.get('io').emit('newComment', newComment)
-        res.status(200).send(newComment);
+      req.app.get('io').emit('newComment', newComment)
+      res.status(200).send(newComment);
       })
       
     })

@@ -1,83 +1,82 @@
-import React, {useState} from 'react'
-import axios from 'axios'
-import { StyleSheet, View, Alert } from 'react-native'
-import {Button, Input} from 'react-native-elements'
+import React, { useState } from "react";
+import axios from "axios";
+import { StyleSheet, View, Alert } from "react-native";
+import { Button, Input } from "react-native-elements";
 
 export default function AddUserToGroup({ route, navigation }) {
-  const [userEmail, setUserEmail] = useState('')
-  
+  const [userEmail, setUserEmail] = useState("");
+
   const sendRequest = async () => {
-    let token = await SecureStore.getItemAsync('token');
-    
+    let token = await SecureStore.getItemAsync("token");
+
     const config = {
       headers: {
-        Authorization: 'Bearer ' + token
-      }
-    }
-    
-    axios.post(`http://192.168.4.62:5000/api/groups/${route.params.group}/add`, {email: userEmail}, config)
-      .then((response) => {
+        Authorization: "Bearer " + token,
+      },
+    };
 
+    axios
+      .post(
+        `http://192.168.4.62:5000/api/groups/${route.params.group}/add`,
+        { email: userEmail },
+        config
+      )
+      .then((response) => {
         if (response.status === 200) {
-          
           Alert.alert(
             "User added to group!",
-            '',
-            [{
-              text: "Go Back",
-              onPress: () => navigation.goBack()
-            }],
-            {cancelable: false}
-          )
+            "",
+            [
+              {
+                text: "Go Back",
+                onPress: () => navigation.goBack(),
+              },
+            ],
+            { cancelable: false }
+          );
         }
       })
       .catch((error) => {
-        const err = error.toJSON()
+        const err = error.toJSON();
 
         if (err.status === 404) {
-          return alert("No user found with that email address. Invite them to download the app!")
+          return alert(
+            "No user found with that email address. Invite them to download the app!"
+          );
         }
 
         if (err.status === 400) {
-          return alert("That user is already in the group.")
+          return alert("That user is already in the group.");
         }
-      })      
-  }
-
+      });
+  };
 
   const submitNewUser = () => {
     if (!userEmail) {
-      return alert("Enter an email address")
+      return alert("Enter an email address");
     }
 
-    sendRequest()
-  }
+    sendRequest();
+  };
 
   return (
     <View style={styles.container}>
-     
       <Input
         label='Who do you want to add to the group?'
         placeholder='Enter email address'
-      
-        onChangeText={text => setUserEmail(text)}
+        onChangeText={(text) => setUserEmail(text)}
       />
-     
-      <Button
-        title="Submit"
-        type="outline"
-        onPress={submitNewUser}
-      />
-    </View>
-  )
-}
 
+      <Button title='Submit' type='outline' onPress={submitNewUser} />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: 40,
     flex: 1,
-    alignItems: 'center',
-    flexDirection: 'column',
-  }
-})
+    alignItems: "center",
+    flexDirection: "column",
+  },
+});

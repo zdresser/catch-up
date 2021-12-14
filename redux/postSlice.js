@@ -1,66 +1,68 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios'
-import * as SecureStore from 'expo-secure-store'
-import socket from '../socket-connect'
-import store from './store'
-import _ from "lodash"
-
-
-socket.on('newComment', comment => {
-  store.dispatch(addComment(comment))
-})
-
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 
 export const getPostAsync = createAsyncThunk(
-  'post/loadPostAsync',
+  "post/loadPostAsync",
   async (post) => {
-    let token = await SecureStore.getItemAsync('token');
-    
+    let token = await SecureStore.getItemAsync("token");
+
     const config = {
       headers: {
-        Authorization: 'Bearer ' + token
-      }
-    }
+        Authorization: "Bearer " + token,
+      },
+    };
 
-    const response = await axios.get(`http://192.168.4.62:5000/api/posts/${post}`, config)
-    const data = response.data
-    return { data }
+    const response = await axios.get(
+      `http://192.168.4.62:5000/api/posts/${post}`,
+      config
+    );
+    const data = response.data;
+    return { data };
   }
-)
+);
 
 export const editPost = createAsyncThunk(
-  'post/editPost',
+  "post/editPost",
   async (editPostObj) => {
-    let token = await SecureStore.getItemAsync('token');
-    
+    let token = await SecureStore.getItemAsync("token");
+
     const config = {
       headers: {
-        Authorization: 'Bearer ' + token
-      }
-    }
+        Authorization: "Bearer " + token,
+      },
+    };
 
-    const response = await axios.put(`http://192.168.4.62:5000/api/posts/${editPostObj.post}`, editPostObj, config)
+    const response = await axios.put(
+      `http://192.168.4.62:5000/api/posts/${editPostObj.post}`,
+      editPostObj,
+      config
+    );
     const data = response.data;
-    return { data }
+    return { data };
   }
-)
+);
 
 export const addComment = createAsyncThunk(
-  'post/addComment',
+  "post/addComment",
   async (addCommentObj) => {
-    let token = await SecureStore.getItemAsync('token');
-    
+    let token = await SecureStore.getItemAsync("token");
+
     const config = {
       headers: {
-        Authorization: 'Bearer ' + token
-      }
-    }
+        Authorization: "Bearer " + token,
+      },
+    };
 
-    const response = await axios.post(`http://192.168.4.62:5000/api/posts/${addCommentObj.post}/comments`, addCommentObj, config)
+    const response = await axios.post(
+      `http://192.168.4.62:5000/api/posts/${addCommentObj.post}/comments`,
+      addCommentObj,
+      config
+    );
     const data = response.data;
-    return {data}
+    return { data };
   }
-)
+);
 
 const postSlice = createSlice({
   name: "post",
@@ -68,26 +70,22 @@ const postSlice = createSlice({
     comments: [],
     text: "",
     author: {},
-    
   },
-  reducers: {},
+  reducers: {
+    addCommentFromSocket(state, action) {
+      state.comments.push(action.payload);
+    },
+  },
   extraReducers: {
     [getPostAsync.fulfilled]: (state, action) => {
-      return action.payload.data
+      return action.payload.data;
     },
 
     [editPost.fulfilled]: (state, action) => {
       //todo
     },
-    [addComment.fulfilled]: (state, action) => {
-      //check to see if comment is already in state when received from socket
-      const ids = state.map(obj => obj._id);
-      if (_.includes(ids, action.payload.data._id)) {
-        return state
-      }
-      state.comments.push(action.payload.data)
-    }
-  }
-})
-
-export default postSlice.reducer
+    [addComment.fulfilled]: (state, action) => {},
+  },
+});
+export const { addCommentFromSocket } = postSlice.actions;
+export default postSlice.reducer;
