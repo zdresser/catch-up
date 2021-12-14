@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -8,46 +8,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { Card } from "react-native-elements";
-import { useDispatch, useSelector } from "react-redux";
-import { getPostAsync, addCommentFromSocket } from "../redux/postSlice";
-import store from "../redux/store";
-import socket from "../socket-connect";
-
-import CommentInput from "../components/CommentInput";
-import ChatContainer from "../components/ChatContainer";
-socket.off("newComment").on("newComment", (comment) => {
-  store.dispatch(addCommentFromSocket(comment));
-});
-
-export default function Post({ navigation, route }) {
-  const user = useSelector((state) => state.user);
-  const post = useSelector((state) => state.post);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getPostAsync(route.params.post));
-  }, []);
-
-  //Wrapper approach is more readable, less repetition but created an
-  //error in rendering the comment input.
-
-  //Return using wrapper code below:
-  // return (
-  //   <Wrapper>
-  //   <ScrollView
-  //     style={styles.chatContainer}
-  //     showsVerticalScrollIndicator={false}
-  //   >
-  //     {post.comments.map((item) => (
-  //       <CommentListItem item={item} key={item._id}/>
-  //     ))
-  //     }
-
-  //     </ScrollView>
-  //     {commentInput()}
-  //     </Wrapper>
-  // )
-
+const Wrapper = ({ children, post }) => {
   if (post.link) {
     return (
       <KeyboardAvoidingView
@@ -70,10 +31,7 @@ export default function Post({ navigation, route }) {
               />
             )}
           </Card>
-
-          <ChatContainer post={post} />
-
-          <CommentInput user={user} post={post} />
+          {children}
         </View>
       </KeyboardAvoidingView>
     );
@@ -87,14 +45,11 @@ export default function Post({ navigation, route }) {
         <Card containerStyle={styles.post}>
           <Card.Title>{post.text}</Card.Title>
         </Card>
-
-        <ChatContainer post={post} />
-
-        <CommentInput user={user} post={post} />
+        {children}
       </View>
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -136,3 +91,5 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 });
+
+export default Wrapper;

@@ -1,95 +1,110 @@
-import React from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, Keyboard, Text } from 'react-native'
-import { Input, Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {Formik} from 'formik'
-import * as yup from 'yup'
-import { signupAsync } from '../redux/userSlice'
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Text,
+} from "react-native";
+import { Input, Button } from "react-native-elements";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Formik } from "formik";
+import * as yup from "yup";
+import { signupAsync } from "../redux/userSlice";
 import { useDispatch } from "react-redux";
 
 const signupValidationSchema = yup.object().shape({
   email: yup
     .string()
     .email("Enter a valid email address")
-    .required('Email is required'),
-  password: yup
-    .string()
-    .required('Password is required'),
-  userName: yup
-    .string()
-    .required("Username is required"),
-  phone: yup
-  .string()
-  .required('Phone number is required'),
-})
+    .required("Email is required"),
+  password: yup.string().required("Password is required"),
+  userName: yup.string().required("Username is required"),
+  phone: yup.string().required("Phone number is required"),
+});
 export default function Signup() {
   const dispatch = useDispatch();
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      Keyboard.dismiss();
-  }}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}>
       <View>
         <Formik
           validationSchema={signupValidationSchema}
-          initialValues={{ email: '', password: '', phone: '', userName: '' }}
-          onSubmit={values => dispatch(signupAsync(values))}
+          initialValues={{ email: "", password: "", phone: "", userName: "" }}
+          onSubmit={(values) => dispatch(signupAsync(values))}
           validateOnChange={false}
-          validateOnBlur={false}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
+          validateOnBlur={false}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            isValid,
+          }) => (
             <>
               <Input
-                placeholder="email@address.com"
-                leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-                label="Email Address"
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
+                placeholder='email@address.com'
+                leftIcon={{ type: "font-awesome", name: "envelope" }}
+                label='Email Address'
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
                 value={values.email}
-                keyboardType="email-address"  
+                keyboardType='email-address'
               />
 
-              {errors.email &&
-            <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
-          }    
+              {errors.email && (
+                <Text style={{ fontSize: 10, color: "red" }}>
+                  {errors.email}
+                </Text>
+              )}
               <Input
-                placeholder="password"
-                leftIcon={{ type: 'font-awesome', name: "lock" }}
-                label="Password"
+                placeholder='password'
+                leftIcon={{ type: "font-awesome", name: "lock" }}
+                label='Password'
                 secureTextEntry={true}
-                onChangeText={text => setPassword(text)}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
+                onChangeText={(text) => setPassword(text)}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
                 value={values.password}
               />
-              {errors.password &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
-            }
+              {errors.password && (
+                <Text style={{ fontSize: 10, color: "red" }}>
+                  {errors.password}
+                </Text>
+              )}
               <Input
-                placeholder="Username"
-                leftIcon={{ type: 'font-awesome', name: 'user' }}
-                label="Username"
-                onChangeText={handleChange('userName')}
-                onBlur={handleBlur('userName')}
+                placeholder='Username'
+                leftIcon={{ type: "font-awesome", name: "user" }}
+                label='Username'
+                onChangeText={handleChange("userName")}
+                onBlur={handleBlur("userName")}
                 value={values.userName}
               />
 
-              {errors.userName &&
-                <Text style={{ fontSize: 10, color: 'red' }}>{errors.userName}</Text>
-              }
+              {errors.userName && (
+                <Text style={{ fontSize: 10, color: "red" }}>
+                  {errors.userName}
+                </Text>
+              )}
               <Input
-                placeholder="+15555555555"
-                leftIcon={{ type: 'font-awesome', name: 'mobile' }}
-                label="Phone number"
-                onChangeText={handleChange('phone')}
-                onBlur={handleBlur('phone')}
+                placeholder='+15555555555'
+                leftIcon={{ type: "font-awesome", name: "mobile" }}
+                label='Phone number'
+                onChangeText={handleChange("phone")}
+                onBlur={handleBlur("phone")}
                 value={values.phone}
               />
-              {errors.phone &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.phone}</Text>
-              }
+              {errors.phone && (
+                <Text style={{ fontSize: 10, color: "red" }}>
+                  {errors.phone}
+                </Text>
+              )}
               <Button
-                title="Submit"
+                title='Submit'
                 type='outline'
                 buttonStyle={styles.button}
                 containerStyle={styles.container}
@@ -98,20 +113,19 @@ export default function Signup() {
               />
             </>
           )}
-      </Formik>
+        </Formik>
       </View>
-    </TouchableWithoutFeedback>     
-    
-  )
+    </TouchableWithoutFeedback>
+  );
 }
 
 const styles = StyleSheet.create({
   button: {
     width: 100,
-    marginRight: 10
+    marginRight: 10,
   },
   container: {
-    flexDirection: 'row',
-    justifyContent: "flex-end"
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
-})
+});
