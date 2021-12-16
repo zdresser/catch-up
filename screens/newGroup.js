@@ -22,6 +22,7 @@ export default function NewGroup({ route, navigation }) {
     );
     navigation.goBack();
   };
+
   return (
     <View style={styles.container}>
       <Input
