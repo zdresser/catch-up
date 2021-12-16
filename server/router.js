@@ -1,128 +1,92 @@
 const express = require("express");
 const app = express();
-const passport = require('passport');
-const passportService = require('./services/passport');
-require('dotenv').config();
+const passport = require("passport");
+const passportService = require("./services/passport");
+require("dotenv").config();
 //import models
-const Comment = require('./models/comment')
-const User = require('./models/user')
-const Group = require('./models/group')
-const Post = require('./models/post')
+const Comment = require("./models/comment");
+const User = require("./models/user");
+const Group = require("./models/group");
+const Post = require("./models/post");
 
 //import controllers
-const Groups = require('./controllers/groups');
-const Posts = require('./controllers/posts')
-const Comments = require('./controllers/comments')
-const Authentication = require('./controllers/authentication')
-
+const Groups = require("./controllers/groups");
+const Posts = require("./controllers/posts");
+const Comments = require("./controllers/comments");
+const Authentication = require("./controllers/authentication");
 
 //auth
-const requireAuth = passport.authenticate('jwt', { session: false });
-const requireSignin = passport.authenticate('local', { session: false });
+const requireAuth = passport.authenticate("jwt", { session: false });
+const requireSignin = passport.authenticate("local", { session: false });
 
 //routes
 module.exports = (app) => {
-//fetches a group
+  //fetches a group
+  app.param("group", (req, res, next, id) => {
+    Group.findById(id).exec((err, group) => {
+      if (!group) {
+        res.status(404).send("Group not found");
+        return res.end();
+      } else if (err) {
+        next(err);
+      }
 
-  app.param('group', (req, res, next, id) => {
-   
-    Group.findById(id)
-      .exec((err, group) => {
-        if (!group) {
-          res.status(404).send('Group not found');
-          return res.end();
-        } else if (err) {
-          next(err)
-        }
-        
-        req.group = group;
-        next();
-      })
-  })
-  
+      req.group = group;
+      next();
+    });
+  });
+
   //fetches a post
-  app.param('post', (req, res, next, id) => {
-    Post.findById(id)
-      .exec((err, post) => {
-        if (!post) {
-          res.status(404).send('Post not found');
-          return res.end();
-        } else if (err) {
-          next(err);
-        }
-  
-        req.post = post;
-        next();
-      })
-  })
-  
+  app.param("post", (req, res, next, id) => {
+    Post.findById(id).exec((err, post) => {
+      if (!post) {
+        res.status(404).send("Post not found");
+        return res.end();
+      } else if (err) {
+        next(err);
+      }
+
+      req.post = post;
+      next();
+    });
+  });
+
   //fetches a comment
-  app.param('comment', (req, res, next, id) => {
-    Comment.findById(id)
-      .exec((err, comment) => {
-        if (!comment) {
-          res.status(404).send('Comment not found');
-          return res.end();
-        } else if (err) {
-          next(err);
-        }
-  
-        req.comment = comment;
-        next();
-      })
-  })
+  app.param("comment", (req, res, next, id) => {
+    Comment.findById(id).exec((err, comment) => {
+      if (!comment) {
+        res.status(404).send("Comment not found");
+        return res.end();
+      } else if (err) {
+        next(err);
+      }
 
-  app.get("/api/groups/:group", requireAuth, Groups.getGroup)
-  app.post('/api/groups', requireAuth, Groups.addGroup)
-  app.put('/api/groups/:group', requireAuth, Groups.editGroup)
-  app.delete('/api/groups/:group', requireAuth, Groups.deleteGroup)
-  app.post('/api/groups/:group/add', requireAuth, Groups.addUserToGroup)
+      req.comment = comment;
+      next();
+    });
+  });
 
-  
-  app.post('/api/groups/:group/posts', requireAuth, Posts.addPost)
+  app.get("/api/groups/:group", requireAuth, Groups.getGroup);
+  app.post("/api/groups", requireAuth, Groups.addGroup);
+  app.put("/api/groups/:group", requireAuth, Groups.editGroup);
+  app.delete("/api/groups/:group", requireAuth, Groups.deleteGroup);
+  app.post("/api/groups/:group/add", requireAuth, Groups.addUserToGroup);
 
-  app.get('/api/posts/:post', requireAuth, Posts.getPost)
-  app.put('/api/posts/:post', requireAuth, Posts.editPost)
-  app.delete('/api/posts/:post', requireAuth, Posts.deletePost)
+  app.post("/api/groups/:group/posts", requireAuth, Posts.addPost);
 
- 
-  app.post('/api/posts/:post/comments', requireAuth, Comments.addComment)
-  app.put('/api/comments/:comment', requireAuth, Comments.editComment)
-  app.delete('/api/comments/:comment', requireAuth, Comments.deleteComment)
+  app.get("/api/posts/:post", requireAuth, Posts.getPost);
+  app.put("/api/posts/:post", requireAuth, Posts.editPost);
+  app.delete("/api/posts/:post", requireAuth, Posts.deletePost);
 
-  app.post('/auth/login', requireSignin, Authentication.login);
-  app.post('/auth/logout', Authentication.logout), //Should backend be involved in logout? 
-  app.post('/auth/signup', Authentication.signup),
-  app.get('/auth/current_user', Authentication.currentUser)
-  
-  app.post('/api/users/:user', Authentication.addToVoteRecord)
-  app.put('/api/users/:user', Authentication.updateVotes)
-  
+  app.post("/api/posts/:post/comments", requireAuth, Comments.addComment);
+  app.put("/api/comments/:comment", requireAuth, Comments.editComment);
+  app.delete("/api/comments/:comment", requireAuth, Comments.deleteComment);
 
-//   const moment = require('moment')
-//   const today = moment().startOf('day')
+  app.post("/auth/login", requireSignin, Authentication.login);
+  app.post("/auth/logout", Authentication.logout), //Should backend be involved in logout?
+    app.post("/auth/signup", Authentication.signup),
+    app.get("/auth/current_user", Authentication.currentUser);
 
-//  //find group updated today
-//   Group.find({
-//     updatedAt: {
-//       $gte: today.toDate(),
-//       $lte: moment(today).endOf('day').toDate()
-//     }
-//   }) 
-//     .populate('posts')
-//     .populate("users", "phone")
-//     .exec((err, groups) => {
-
-//       groups.forEach(group => {
-//         const posts = group.posts.filter(post => post.createdAt >= today.toDate())
-//         posts.sort((a, b) => (a.upVotes > b.upvotes) ? 1 : -1)
-//         const topPost = posts[0]
-
-//         const groupText = group.users.map(user => user.phone)
-        
-
-//         //send out topPost to groupText
-//       })
-      
-//     })
-}
+  app.post("/api/users/:user", Authentication.addToVoteRecord);
+  app.put("/api/users/:user", Authentication.updateVotes);
+};
