@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, Linking } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Linking,
+  FlatList,
+} from "react-native";
 import { ListItem, Button, Icon, Image, Switch } from "react-native-elements";
 import {
   getGroupAsync,
+  loadMorePosts,
   editPostVotes,
   sortPostsByUpvotes,
   sortPostsByDate,
@@ -15,6 +23,7 @@ export default function Group({ route, navigation }) {
   const group = useSelector((state) => state.group);
   const user = useSelector((state) => state.user);
   const [sortByDate, setSortByDate] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -199,9 +208,25 @@ export default function Group({ route, navigation }) {
     );
   };
 
+  const renderPost = ({ item }) => {
+    if (item.link) {
+      return <PostWithLink post={item} />;
+    } else {
+      return <PostWithoutLink post={item} />;
+    }
+  };
+
+  const loadMore = async () => {
+    console.log("Load more");
+    const page = currentPage + 1;
+
+    dispatch(loadMorePosts({ group: route.params.group, page: page }));
+    setCurrentPage(page);
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView>
+      {/* <ScrollView>
         {group.posts.map((post) => {
           if (post.link) {
             return <PostWithLink post={post} key={post._id} />;
@@ -209,8 +234,13 @@ export default function Group({ route, navigation }) {
             return <PostWithoutLink post={post} key={post._id} />;
           }
         })}
-      </ScrollView>
-
+      </ScrollView> */}
+      <FlatList
+        data={group.posts}
+        renderItem={renderPost}
+        keyExtractor={(item) => item._id}
+        onEndReached={loadMore}
+      />
       <GroupBottomBar
         sortByDate={sortByDate}
         setSortByDate={setSortByDate}
