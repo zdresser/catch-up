@@ -3,7 +3,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 export const getGroupAsync = createAsyncThunk(
-  "post/loadGroupAsync",
+  "group/loadGroupAsync",
   async (group) => {
     let token = await SecureStore.getItemAsync("token");
 
@@ -17,13 +17,41 @@ export const getGroupAsync = createAsyncThunk(
       `http://192.168.4.62:5000/api/groups/${group}`,
       config
     );
+
     const data = response.data;
+
+    return { data };
+  }
+);
+
+export const loadMorePosts = createAsyncThunk(
+  "group/loadMorePosts",
+  async ({ group, page }) => {
+    console.log("page" + page);
+    let token = await SecureStore.getItemAsync("token");
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      params: {
+        page: page,
+      },
+    };
+
+    const response = await axios.get(
+      `http://192.168.4.62:5000/api/groups/${group}`,
+      config
+    );
+
+    const data = response.data;
+
     return { data };
   }
 );
 
 export const addPostAsync = createAsyncThunk(
-  "post/addPostAsync",
+  "group/addPostAsync",
   async (newPostObject) => {
     let token = await SecureStore.getItemAsync("token");
 
@@ -80,6 +108,9 @@ const groupSlice = createSlice({
   extraReducers: {
     [getGroupAsync.fulfilled]: (state, action) => {
       return action.payload.data;
+    },
+    [loadMorePosts.fulfilled]: (state, action) => {
+      state.posts.push(...action.payload.data.posts);
     },
     [addPostAsync.fulfilled]: (state, action) => {
       state.posts.push(action.payload.data);
