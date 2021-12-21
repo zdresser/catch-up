@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
-  Text,
-  ScrollView,
-  Linking,
   FlatList,
+  ActivityIndicator,
+  StatusBar,
 } from "react-native";
-import { ListItem, Button, Icon, Image, Switch } from "react-native-elements";
+import { ListItem, Icon, Image } from "react-native-elements";
 import {
   getGroupAsync,
   loadMorePosts,
@@ -20,10 +19,14 @@ import { useDispatch, useSelector } from "react-redux";
 import GroupBottomBar from "../components/GroupBottomBar";
 
 export default function Group({ route, navigation }) {
+  //redux state
   const group = useSelector((state) => state.group);
   const user = useSelector((state) => state.user);
+  //component state
   const [sortByDate, setSortByDate] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -217,29 +220,31 @@ export default function Group({ route, navigation }) {
   };
 
   const loadMore = async () => {
-    console.log("Load more");
+    setIsLoading(true);
     const page = currentPage + 1;
 
     dispatch(loadMorePosts({ group: route.params.group, page: page }));
     setCurrentPage(page);
+    setIsLoading(false);
+  };
+
+  const renderLoader = () => {
+    return isLoading ? (
+      <View style={styles.loaderStyle}>
+        <ActivityIndicator size='large' color='white' />
+      </View>
+    ) : null;
   };
 
   return (
     <View style={styles.container}>
-      {/* <ScrollView>
-        {group.posts.map((post) => {
-          if (post.link) {
-            return <PostWithLink post={post} key={post._id} />;
-          } else {
-            return <PostWithoutLink post={post} key={post._id} />;
-          }
-        })}
-      </ScrollView> */}
       <FlatList
         data={group.posts}
         renderItem={renderPost}
         keyExtractor={(item) => item._id}
         onEndReached={loadMore}
+        onEndReachedThreshold={0}
+        ListFooterComponent={renderLoader}
       />
       <GroupBottomBar
         sortByDate={sortByDate}
@@ -286,5 +291,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#FEFBF3",
+  },
+  loaderStyle: {
+    marginVertical: 16,
+    alignItems: "center",
   },
 });
