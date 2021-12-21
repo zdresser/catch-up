@@ -44,9 +44,17 @@ export const signupAsync = createAsyncThunk(
 export const addGroupAsync = createAsyncThunk(
   "user/addGroupAsync",
   async (newGroupObj) => {
+    let token = await SecureStore.getItemAsync("token");
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
     const response = await axios.post(
       "http://192.168.4.62:5000/api/groups",
-      newGroupObj
+      newGroupObj,
+      config
     );
 
     const data = response.data;
