@@ -27,7 +27,6 @@ export const getGroupAsync = createAsyncThunk(
 export const loadMorePosts = createAsyncThunk(
   "group/loadMorePosts",
   async ({ group, page }) => {
-    console.log("page" + page);
     let token = await SecureStore.getItemAsync("token");
 
     const config = {
