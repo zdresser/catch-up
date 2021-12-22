@@ -9,7 +9,7 @@ export default function useDownvote() {
   const group = useSelector((state) => state.group);
   const dispatch = useDispatch();
 
-  const handleDownvotePress = (id) => {
+  const downvote = (id) => {
     if (user.voteRecord.some((record) => record.post === id)) {
       //find obj in voteRecord array
       const postVoteRecord = user.voteRecord.find(
@@ -50,5 +50,5 @@ export default function useDownvote() {
     );
   };
 
-  return handleDownvotePress;
+  return downvote;
 }

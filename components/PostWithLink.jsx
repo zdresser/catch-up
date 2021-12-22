@@ -2,96 +2,20 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet } from "react-native";
 import { ListItem, Icon, Image } from "react-native-elements";
-import { editPostVotes } from "../redux/groupSlice";
-import { addUserVoteAsync, editUserVoteAsync } from "../redux/userSlice";
+
+import useUpvote from "../util/useUpvote";
+import useDownvote from "../util/useDownvote";
 
 export const PostWithLink = ({ post, navigation }) => {
   const user = useSelector((state) => state.user);
   const group = useSelector((state) => state.group);
   const dispatch = useDispatch();
+
+  const upvote = useUpvote();
+  const downvote = useDownvote();
+
   const handlePostPress = (id) => {
     navigation.navigate("Post", { post: id });
-  };
-  const handleUpvotePress = (id) => {
-    //check for previous vote
-    if (user.voteRecord.some((record) => record.post === id)) {
-      //find obj in voteRecord array
-      const postVoteRecord = user.voteRecord.find(
-        (record) => record.post === id
-      );
-      //check to see if vote === 1
-      if (postVoteRecord.vote === 1) {
-        return alert("You've already upvoted this post");
-      }
-      dispatch(
-        editUserVoteAsync({
-          user: user._id,
-          post: id,
-          vote: postVoteRecord.vote + 1,
-        })
-      );
-    } else {
-      //dispatch addUserVoteAsync
-      dispatch(
-        addUserVoteAsync({
-          user: user._id,
-          post: id,
-          vote: 1,
-        })
-      );
-    }
-
-    const post = group.posts.find(({ _id }) => _id === id);
-
-    const votes = post.upvotes + 1;
-    //dispatch update
-    dispatch(
-      editPostVotes({
-        post: id,
-        upvotes: votes,
-      })
-    );
-  };
-
-  const handleDownvotePress = (id) => {
-    if (user.voteRecord.some((record) => record.post === id)) {
-      //find obj in voteRecord array
-      const postVoteRecord = user.voteRecord.find(
-        (record) => record.post === id
-      );
-      //check to see if vote === 1
-      if (postVoteRecord.vote === -1) {
-        return alert("You've already downvoted this post");
-      }
-
-      //dispatch editUserVoteAsync
-      dispatch(
-        editUserVoteAsync({
-          user: user._id,
-          post: id,
-          vote: postVoteRecord.vote - 1,
-        })
-      );
-    } else {
-      //dispatch addUserVoteAsync
-      dispatch(
-        addUserVoteAsync({
-          user: user._id,
-          post: id,
-          vote: -1,
-        })
-      );
-    }
-    const post = group.posts.find(({ _id }) => _id === id);
-
-    const votes = post.upvotes - 1;
-
-    dispatch(
-      editPostVotes({
-        post: id,
-        upvotes: votes,
-      })
-    );
   };
 
   return (
@@ -103,7 +27,7 @@ export const PostWithLink = ({ post, navigation }) => {
         name='arrow-up'
         type='font-awesome-5'
         color='#F8F0DF'
-        onPress={() => handleUpvotePress(post._id)}
+        onPress={() => upvote(post._id)}
       />
 
       <ListItem.Content>
@@ -135,7 +59,7 @@ export const PostWithLink = ({ post, navigation }) => {
         name='arrow-down'
         type='font-awesome-5'
         color='#F8F0DF'
-        onPress={() => handleDownvotePress(post._id)}
+        onPress={() => downvote(post._id)}
       />
     </ListItem>
   );

@@ -107,6 +107,7 @@ const userSlice = createSlice({
   },
   extraReducers: {
     [loginAsync.fulfilled]: (state, action) => {
+      console.log(action.payload.data);
       SecureStore.setItemAsync("token", action.payload.data.token);
       SecureStore.setItemAsync("userData", JSON.stringify(action.payload.data));
       return action.payload.data;

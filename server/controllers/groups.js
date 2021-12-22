@@ -2,7 +2,7 @@ const User = require("../models/user");
 const Group = require("../models/group");
 
 exports.getGroup = (req, res, next) => {
-  const perPage = 9;
+  const perPage = 19;
   const page = req.query.page || 1;
 
   Group.findById(req.params.group, {

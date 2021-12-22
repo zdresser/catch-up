@@ -1,14 +1,14 @@
-//doesn't work yet
+//this works but makes the whole app very slow???
 import { useDispatch, useSelector } from "react-redux";
 import { editPostVotes } from "../redux/groupSlice";
 import { addUserVoteAsync, editUserVoteAsync } from "../redux/userSlice";
 
-export default function upvote(id) {
+export default function useUpvote() {
   const user = useSelector((state) => state.user);
   const group = useSelector((state) => state.group);
   const dispatch = useDispatch();
 
-  const handleUpvotePress = () => {
+  const upvote = (id) => {
     //check for previous vote
     if (user.voteRecord.some((record) => record.post === id)) {
       //find obj in voteRecord array
@@ -49,5 +49,5 @@ export default function upvote(id) {
     );
   };
 
-  handleUpvotePress();
+  return upvote;
 }
